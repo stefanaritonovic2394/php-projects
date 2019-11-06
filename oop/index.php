@@ -2,12 +2,12 @@
 
 interface LoginInterface 
 {
-    public function loginUser($user);
+    public function loginUser(string $user): string;
 }
 
 interface RegisterInterface 
 {
-    public function registerUser($user);
+    public function registerUser(string $user): string;
 }
 
 require 'classes/Login.php';
