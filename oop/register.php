@@ -1,9 +1,9 @@
 <?php
     require_once 'classes/DB.php';
 
-    if ($user->is_logged_in() != "") {
-        $user->redirect('index.php');
-    }
+    // if ($user->is_logged_in() != "") {
+    //     $user->redirect('index.php');
+    // }
 
     if (isset($_POST['btnRegister'])) {
         $uname = trim(htmlentities($_POST['name']));
