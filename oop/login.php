@@ -1,9 +1,14 @@
 <?php
     require_once 'classes/DB.php';
+    require_once 'classes/User.php';
 
-    // if ($user->is_logged_in() != "") {
-    //     $user->redirect('index.php');
-    // }
+    $dbInstance = DB::getInstance();
+    $dbConnection = $dbInstance->getConnection();
+    $user = new User($dbConnection);
+
+    if ($user->is_logged_in() != "") {
+        $user->redirect('index.php');
+    }
 
     if (isset($_POST['btnLogin'])) {
         $umail = trim(htmlentities($_POST['email']));

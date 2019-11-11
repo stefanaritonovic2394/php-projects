@@ -25,10 +25,44 @@
 
         public static function selectAll()
         {
-            $stmt = self::$db->prepare("SELECT * FROM users");
+            $connection = DB::getConnection();
+            $stmt = $connection->prepare("SELECT * FROM users");
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result;
+        }
+
+        public static function selectById($id)
+        {
+            $connection = DB::getConnection();
+            $stmt = $connection->prepare("SELECT * FROM users WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result;
+        }
+
+        public static function insertUser($name, $email, $password)
+        {
+            $connection = DB::getConnection();
+            $stmt = $connection->prepare("INSERT INTO users(name, email, password) VALUES(:name, :email, :password)");
+            $stmt->execute(['name' => $name, 'email' => $email, 'password' => $password]);
+            return true;
+        }
+
+        public static function updateUser($name, $email, $password, $id)
+        {
+            $connection = DB::getConnection();
+            $stmt = $connection->prepare("UPDATE users SET name = :name, email = :email, password = :password WHERE id = :id");
+            $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT), 'id' => $id]);
+            return true;
+        }
+
+        public static function deleteUser($id)
+        {
+            $connection = DB::getConnection();
+            $stmt = $connection->prepare("DELETE FROM users WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+            return true;
         }
 
         private function setColumns(array $columns)

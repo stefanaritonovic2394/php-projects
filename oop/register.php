@@ -1,9 +1,14 @@
 <?php
     require_once 'classes/DB.php';
+    require_once 'classes/User.php';
 
-    // if ($user->is_logged_in() != "") {
-    //     $user->redirect('index.php');
-    // }
+    $dbInstance = DB::getInstance();
+    $dbConnection = $dbInstance->getConnection();
+    $user = new User($dbConnection);
+
+    if ($user->is_logged_in() != "") {
+        $user->redirect('index.php');
+    }
 
     if (isset($_POST['btnRegister'])) {
         $uname = trim(htmlentities($_POST['name']));
@@ -27,7 +32,7 @@
             $error[] = "The two passwords do not match!";
         } else {
             try {
-                $stmt = $conn->prepare("SELECT name, email FROM users WHERE name = :uname OR email = :umail");
+                $stmt = $dbConnection->prepare("SELECT name, email FROM users WHERE name = :uname OR email = :umail");
                 $stmt->execute(array(':uname'=>$uname, ':umail'=>$umail));
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 

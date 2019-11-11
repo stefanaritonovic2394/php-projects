@@ -1,9 +1,11 @@
 <?php
 
+    require_once 'classes/DB.php';
+
     class User {
         private $db;
 
-        function __construct($conn) {
+        public function __construct($conn) {
             $this->db = $conn;
         }
 
