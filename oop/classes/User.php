@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'classes/DB.php';
+    require_once 'classes/Connection.php';
 
     class User {
         private $db;

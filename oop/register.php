@@ -1,10 +1,10 @@
 <?php
-    require_once 'classes/DB.php';
+    require_once 'classes/Connection.php';
     require_once 'classes/User.php';
 
-    $dbInstance = DB::getInstance();
-    $dbConnection = $dbInstance->getConnection();
-    $user = new User($dbConnection);
+    $dbInstance = Connection::getInstance();
+    //$dbConnection = $dbInstance->getConnection();
+    $user = new User($dbInstance);
 
     if ($user->is_logged_in() != "") {
         $user->redirect('index.php');
@@ -32,7 +32,7 @@
             $error[] = "The two passwords do not match!";
         } else {
             try {
-                $stmt = $dbConnection->prepare("SELECT name, email FROM users WHERE name = :uname OR email = :umail");
+                $stmt = $dbInstance->prepare("SELECT name, email FROM users WHERE name = :uname OR email = :umail");
                 $stmt->execute(array(':uname'=>$uname, ':umail'=>$umail));
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 

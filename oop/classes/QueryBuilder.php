@@ -1,15 +1,17 @@
 <?php
 
-    require_once 'classes/DB.php';
+    require_once 'classes/Connection.php';
 
-    // $dbInstance = DB::getInstance();
+    // $dbInstance = Connection::getInstance();
     // $dbConnection = $dbInstance->getConnection();
 
     class QueryBuilder 
     {
-        private static $db;
+        private $db;
+        private static $instance = null;
         private $stmt;
-        private $table;
+        private static $table;
+        private $connection;
         private $param;
         private $cols, $columns;
         private $holders, $placehold;
@@ -18,67 +20,86 @@
         public $data;
         public $results;
 
-        public function __construct()
+        private function __construct()
         {
-            self::$db = DB::getInstance();
+            $this->db = Connection::getInstance();
+            //$this->connection = Connection::getPDO();
         }
 
-        public static function selectAll()
+        public static function getInstance()
         {
-            $connection = DB::getConnection();
-            $stmt = $connection->prepare("SELECT * FROM users");
+            if (!self::$instance) {
+                self::$instance = new QueryBuilder();
+            }
+
+            return self::$instance;
+        }
+
+        public static function table($table)
+        {
+//            $this->table = $table;
+            self::$table = $table;
+            return self::getInstance();
+        }
+
+        public function selectAll()
+        {
+            $stmt = $this->db->prepare("SELECT * FROM " . self::$table);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         }
 
-        public static function selectById($id)
+        public function selectById($id)
         {
-            $connection = DB::getConnection();
-            $stmt = $connection->prepare("SELECT * FROM users WHERE id = :id");
+            $stmt = $this->db->prepare("SELECT * FROM " . self::$table . " WHERE id = :id");
             $stmt->execute(['id' => $id]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result;
         }
 
-        public static function insertUser($name, $email, $password)
+        public function insertUser($name, $email, $password)
         {
-            $connection = DB::getConnection();
-            $stmt = $connection->prepare("INSERT INTO users(name, email, password) VALUES(:name, :email, :password)");
-            $stmt->execute(['name' => $name, 'email' => $email, 'password' => $password]);
+            $stmt = $this->db->prepare("INSERT INTO users(name, email, password) VALUES(:name, :email, :password)");
+            $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT)]);
             return true;
         }
 
-        public static function updateUser($name, $email, $password, $id)
+        public function updateUser($name, $email, $password, $id)
         {
-            $connection = DB::getConnection();
-            $stmt = $connection->prepare("UPDATE users SET name = :name, email = :email, password = :password WHERE id = :id");
+            $stmt = $this->db->prepare("UPDATE users SET name = :name, email = :email, password = :password WHERE id = :id");
             $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT), 'id' => $id]);
             return true;
         }
 
-        public static function deleteUser($id)
+        public function deleteUser($id)
         {
-            $connection = DB::getConnection();
-            $stmt = $connection->prepare("DELETE FROM users WHERE id = :id");
+            $stmt = $this->db->prepare("DELETE FROM users WHERE id = :id");
             $stmt->execute(['id' => $id]);
             return true;
         }
 
-        private function setColumns(array $columns)
+        public function insertPost($title, $content, $created_at)
         {
-            $cols = implode(', ', array_values($columns));
-            return $cols;
+            $stmt = $this->db->prepare("INSERT INTO posts(title, content, created_at) VALUES(:title, :content, :created_at)");
+            $stmt->execute(['title' => $title, 'content' => $content, 'created_at' => $created_at]);
+            return true;
         }
 
-        public function select($table, array $columns, $field, $param)
-        {
-            $cols = $this->setColumns($columns);
-            $stmt = $this->db->prepare("SELECT $cols FROM $table WHERE $field = ?");
-            $stmt->execute(array($param));
-            $result = $stmt->fetch();
-            return json_encode($result);
-        }
+        // private function setColumns(array $columns)
+        // {
+        //     $cols = implode(', ', array_values($columns));
+        //     return $cols;
+        // }
+
+        // public function select($table, array $columns, $field, $param)
+        // {
+        //     $cols = $this->setColumns($columns);
+        //     $stmt = $this->db->prepare("SELECT $cols FROM $table WHERE $field = ?");
+        //     $stmt->execute(array($param));
+        //     $result = $stmt->fetch();
+        //     return json_encode($result);
+        // }
 
         public function query($query)
         {

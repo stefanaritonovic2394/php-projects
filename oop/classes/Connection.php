@@ -1,21 +1,21 @@
 <?php
 
-    class DB 
+    class Connection
     {
         private static $instance = null;
-        private static $conn;
+        private static $pdo;
 
         private $db_host = 'localhost';
         private $db_user = 'stefan';
         private $db_password = 'stefan12';
         private $db_name = 'oop_login_register';
 
-        public function __construct() 
+        private function __construct() 
         {
             try {
-                self::$conn = new PDO("mysql:host={$this->db_host};dbname={$this->db_name}", $this->db_user, $this->db_password);
-                self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                self::$conn->exec('set names utf8');
+                self::$pdo = new PDO("mysql:host={$this->db_host};dbname={$this->db_name}", $this->db_user, $this->db_password);
+                self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                self::$pdo->exec('set names utf8');
                 //echo $this->db_host . " connected successfully" . PHP_EOL;
             } catch (PDOException $e) {
                 echo "Connection failed: " . $e->getMessage();
@@ -26,14 +26,14 @@
         public static function getInstance()
         {
             if (!self::$instance) {
-                self::$instance = new DB();
+                self::$instance = new Connection();
             }
             
-            return self::$instance;
+            return self::getPDO();
         }
 
-        public static function getConnection() 
+        public static function getPDO()
         {
-            return self::$conn;
+            return self::$pdo;
         }
     }

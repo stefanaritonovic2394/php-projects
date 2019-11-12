@@ -1,10 +1,10 @@
 <?php
-    require_once 'classes/DB.php';
+    require_once 'classes/Connection.php';
     require_once 'classes/User.php';
 
-    $dbInstance = DB::getInstance();
-    $dbConnection = $dbInstance->getConnection();
-    $user = new User($dbConnection);
+    $dbInstance = Connection::getInstance();
+    //$dbConnection = $dbInstance->getConnection();
+    $user = new User($dbInstance);
 
     if ($user->is_logged_in() != "") {
         $user->redirect('index.php');
