@@ -1,6 +1,7 @@
 <?php
-    require_once 'classes/Connection.php';
-    require_once 'classes/User.php';
+//    require_once 'classes/Connection.php';
+//    require_once 'classes/User.php';
+    include 'includes/autoload.php';
 
     $dbInstance = Connection::getInstance();
     //$dbConnection = $dbInstance->getConnection();

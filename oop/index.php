@@ -1,7 +1,9 @@
 <?php
 
-require_once 'classes/Connection.php';
-require_once 'classes/QueryBuilder.php';
+//require_once 'classes/Connection.php';
+//require_once 'classes/QueryBuilder.php';
+//require_once '../vendor/autoload.php';
+include __DIR__ . '/includes/autoload.php';
 
 /*
 interface LoginInterface 
@@ -42,10 +44,12 @@ $posts = QueryBuilder::table('posts')->selectAll();
 //$insert = QueryBuilder::table('posts')->insertPost('Treci post', 'Ovo je treci post', date('Y-m-d H:i:s'));
 
 /* Update user */
-//$update = QueryBuilder::updateUser('Marko', 'marko@gmail.com', 'marko', 8);
+//$update = QueryBuilder::updateUser('Test2', 'test2@gmail.com', 'test2', 9);
+//$update = QueryBuilder::table('users')->updateUser('Test2', 'test2@gmail.com', 'test2', 9);
 
 /* Delete user */
 //$delete = QueryBuilder::deleteUser(7);
+//$delete = QueryBuilder::table('users')->deleteUser();
 
 ?>
 

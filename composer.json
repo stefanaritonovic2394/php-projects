@@ -1,0 +1,13 @@
+{
+    "name": "quantox/php-projects",
+    "authors": [
+        {
+            "name": "stefan.aritonovic",
+            "email": "stefan.aritonovic@quantox.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {"App\\": "oop/"}
+    }
+}

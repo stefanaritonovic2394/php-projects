@@ -1,15 +1,19 @@
 <?php
 
-    require_once 'classes/Connection.php';
+//    require_once 'classes/Connection.php';
+//    include '../includes/autoload.php';
 
-    class User {
+    class User
+    {
         private $db;
 
-        public function __construct($conn) {
+        public function __construct($conn)
+        {
             $this->db = $conn;
         }
 
-        public function register($uname, $umail, $upass) {
+        public function register($uname, $umail, $upass)
+        {
             try {
                 $new_pass = password_hash($upass, PASSWORD_DEFAULT);
                 
@@ -27,7 +31,8 @@
             }
         }
 
-        public function login($umail, $upass) {
+        public function login($umail, $upass)
+        {
             try {
                 $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :umail OR password = :upass");
                 $stmt->execute(array(':umail' => $umail, ':upass' => $upass));
@@ -47,17 +52,20 @@
             }
         }
 
-        public function redirect($url) {
+        public function redirect($url)
+        {
             header("Location: $url");
         }
 
-        public function is_logged_in() {
+        public function is_logged_in()
+        {
             if (isset($_SESSION['user_session'])) {
                 return true;
             }
         }
 
-        public function logout() {
+        public function logout()
+        {
             session_destroy();
             unset($_SESSION['user_session']);
             return true;

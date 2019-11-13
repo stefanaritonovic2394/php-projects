@@ -1,6 +1,8 @@
 <?php
 
-    require_once 'classes/Connection.php';
+    //include '../includes/config.php';
+    //include __DIR__ . '/../includes/autoload.php';
+    //require_once '../../vendor/autoload.php';
 
     // $dbInstance = Connection::getInstance();
     // $dbConnection = $dbInstance->getConnection();
