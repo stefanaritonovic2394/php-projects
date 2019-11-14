@@ -6,8 +6,12 @@
             "email": "stefan.aritonovic@quantox.com"
         }
     ],
-    "require": {},
+    "require": {
+        "ext-pdo": "*"
+    },
     "autoload": {
-        "psr-4": {"App\\": "oop/"}
+        "psr-4": {
+            "App\\": "src/Classes/"
+        }
     }
 }

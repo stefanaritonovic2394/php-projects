@@ -1,21 +1,7 @@
 <?php
 
-//require_once 'classes/Connection.php';
-//require_once 'classes/QueryBuilder.php';
-//require_once '../vendor/autoload.php';
-include __DIR__ . '/includes/autoload.php';
-
-/*
-interface LoginInterface 
-{
-    public function loginUser(string $user): string;
-}
-
-interface RegisterInterface 
-{
-    public function registerUser(string $user): string;
-}
-*/
+require __DIR__ . '/../vendor/autoload.php';
+use App\Classes\QueryBuilder;
 
 // if (!$user->is_logged_in()) {
 //     $user->redirect('login.php');
@@ -36,7 +22,7 @@ $posts = QueryBuilder::table('posts')->selectAll();
 
 /* Select user by id */
 //$post = QueryBuilder::get()->from('posts')->selectById(2);
-//$post = QueryBuilder::table('posts')->selectById(1);
+//$user = QueryBuilder::table('users')->selectById(11);
 
 /* Insert user */
 //$insert = QueryBuilder::insertUser('Test3', 'test3@gmail.com', 'test123');
@@ -79,7 +65,7 @@ $posts = QueryBuilder::table('posts')->selectAll();
             </ul>
         </div>
         <div>
-            <h3><?php //echo $post['content']; ?></h3>
+            <h3><?php //echo $user['email']; ?></h3>
         </div>
     </div>
 <?php include 'includes/footer.php'; ?>

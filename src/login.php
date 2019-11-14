@@ -1,7 +1,9 @@
 <?php
-//    require_once 'classes/Connection.php';
-//    require_once 'classes/User.php';
-    include 'includes/autoload.php';
+
+    require __DIR__ . '/../vendor/autoload.php';
+
+    use App\Classes\User;
+    use App\Classes\Connection;
 
     $dbInstance = Connection::getInstance();
     //$dbConnection = $dbInstance->getConnection();

@@ -7,16 +7,16 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="http://localhost/php-projects/oop/">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="<?php echo ROOT_URL; ?>">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://localhost/php-projects/oop/login.php">Login</a>
+                <a class="nav-link" href="<?php echo ROOT_URL; ?>login.php">Login</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://localhost/php-projects/oop/register.php">Register</a>
+                <a class="nav-link" href="<?php echo ROOT_URL; ?>register.php">Register</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="logout.php?logout=true">Logout</a>
+                <a class="nav-link" href="<?php echo ROOT_URL; ?>logout.php?logout=true">Logout</a>
             </li>
         </ul>
     </div>

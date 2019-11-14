@@ -1,7 +1,7 @@
 <?php
 
-//    require_once 'classes/Connection.php';
-//    include '../includes/autoload.php';
+    namespace App\Classes;
+    use PDO;
 
     class User
     {

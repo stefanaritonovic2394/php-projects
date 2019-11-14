@@ -1,5 +1,8 @@
 <?php
 
+    namespace App\Classes;
+    use PDO;
+
     class Connection
     {
         private static $instance = null;

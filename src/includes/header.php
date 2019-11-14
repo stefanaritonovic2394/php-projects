@@ -11,4 +11,5 @@
     <title>Home</title>
 </head>
 <body>
+    <?php require 'config.php' ?>
     <?php include 'navbar.php' ?>

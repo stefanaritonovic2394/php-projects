@@ -1,5 +1,7 @@
 <?php
 
+    namespace App\Classes;
+    use PDO;
     //include '../includes/config.php';
     //include __DIR__ . '/../includes/autoload.php';
     //require_once '../../vendor/autoload.php';
@@ -50,11 +52,14 @@
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result;
+            //$this->prepareAndExecute("SELECT * FROM " . self::$table);
+            //$this->fetchAll();
+            //return $this;
         }
 
         public function selectById($id)
         {
-            $stmt = $this->db->prepare("SELECT * FROM " . self::$table . " WHERE id = :id");
+            $stmt = $this->prepareAndExecute("SELECT * FROM " . self::$table . " WHERE id = :id");
             $stmt->execute(['id' => $id]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result;
@@ -103,14 +108,23 @@
         //     return json_encode($result);
         // }
 
-        public function query($query)
+        public function prepareAndExecute($query = null, $params = null)
         {
-            $this->stmt = $this->conn->prepare($query);
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            return $stmt;
         }
 
-        public function execute()
+//        public function execute()
+//        {
+//            return $this->stmt->execute();
+//        }
+
+        public function fetchAll($style = null)
         {
-            return $this->stmt->execute();
+            $prepare_result = $this->prepareAndExecute();
+            $result = $prepare_result->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
         }
 
     }
