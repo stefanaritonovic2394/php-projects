@@ -16,10 +16,11 @@
         private $stmt;
         private static $table;
         private $connection;
-        private $param;
+        private $params;
         private $cols, $columns;
         private $holders, $placehold;
         private $fields, $field;
+        private $executePrepare;
 
         public $data;
         public $results;
@@ -48,20 +49,17 @@
 
         public function selectAll()
         {
-            $stmt = $this->db->prepare("SELECT * FROM " . self::$table);
-            $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//            $stmt = $this->db->prepare("SELECT * FROM " . self::$table);
+//            $stmt->execute();
+//            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//            return $result;
+            $result = $this->prepareAndExecute("SELECT * FROM " . self::$table);
             return $result;
-            //$this->prepareAndExecute("SELECT * FROM " . self::$table);
-            //$this->fetchAll();
-            //return $this;
         }
 
         public function selectById($id)
         {
-            $stmt = $this->prepareAndExecute("SELECT * FROM " . self::$table . " WHERE id = :id");
-            $stmt->execute(['id' => $id]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $this->prepareAndExecute("SELECT * FROM " . self::$table . " WHERE id = :id", ['id' => $id]);
             return $result;
         }
 
@@ -108,11 +106,12 @@
         //     return json_encode($result);
         // }
 
-        public function prepareAndExecute($query = null, $params = null)
+        public function prepareAndExecute(string $query, array $params = [], $style = PDO::FETCH_ASSOC)
         {
             $stmt = $this->db->prepare($query);
-            $stmt->execute();
-            return $stmt;
+            $stmt->execute($params);
+            $this->executePrepare = $stmt->fetchAll($style);
+            return $this->executePrepare;
         }
 
 //        public function execute()
@@ -120,11 +119,9 @@
 //            return $this->stmt->execute();
 //        }
 
-        public function fetchAll($style = null)
-        {
-            $prepare_result = $this->prepareAndExecute();
-            $result = $prepare_result->fetchAll(PDO::FETCH_ASSOC);
-            return $result;
-        }
+//        public function fetchAll($style = PDO::FETCH_ASSOC)
+//        {
+//            return $this->executePrepare->fetchAll($style);
+//        }
 
     }
