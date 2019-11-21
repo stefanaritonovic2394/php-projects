@@ -1,7 +1,10 @@
 <?php
 
     namespace App\Classes;
+
     use PDO;
+    use App\Classes\QueryBuilder;
+    use PDOException;
 
     class User
     {
@@ -16,15 +19,18 @@
         {
             try {
                 $new_pass = password_hash($upass, PASSWORD_DEFAULT);
-                
-                $stmt = $this->db->prepare("INSERT INTO users(name, email, password) VALUES(:uname, :umail, :upass)");
+                $queryBuilder = QueryBuilder::getInstance();
+                $queryBuilder->prepareExecute("INSERT INTO users(name, email, password) VALUES(:uname, :umail, :upass)", ['uname' => $uname, 'umail' => $umail, 'upass' => $new_pass]);
+                return $queryBuilder;
 
-                $stmt->bindparam(":uname", $uname);
-                $stmt->bindparam(":umail", $umail);
-                $stmt->bindparam(":upass", $new_pass);
-                $stmt->execute();
-
-                return $stmt;
+//                $stmt = $this->db->prepare("INSERT INTO users(name, email, password) VALUES(:uname, :umail, :upass)");
+//
+//                $stmt->bindparam(":uname", $uname);
+//                $stmt->bindparam(":umail", $umail);
+//                $stmt->bindparam(":upass", $new_pass);
+//                $stmt->execute();
+//
+//                return $stmt;
 
             } catch (PDOException $e) {
                 echo $e->getMessage();
@@ -34,18 +40,20 @@
         public function login($umail, $upass)
         {
             try {
-                $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :umail OR password = :upass");
-                $stmt->execute(array(':umail' => $umail, ':upass' => $upass));
-                $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
+                $queryBuilder = QueryBuilder::getInstance();
+                $user = $queryBuilder::table("users")->selectAll()->where(['email' => $umail, 'password' => $upass]);
+//                $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :umail OR password = :upass");
+//                $stmt->execute(array(':umail' => $umail, ':upass' => $upass));
+//                $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                if ($stmt->rowCount() == 1) {
-                    if (password_verify($upass, $userRow['password'])) {
-                        $_SESSION['user_session'] = $userRow['id'];
+                //if ($user->rowCount() == 1) {
+                    if (password_verify($upass, $user['password'])) {
+                        $_SESSION['user_session'] = $user['id'];
                         return true;
                     } else {
                         return false;
                     }
-                }
+                //}
 
             } catch (PDOException $e) {
                 echo $e->getMessage();

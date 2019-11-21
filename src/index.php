@@ -35,7 +35,7 @@ $posts = QueryBuilder::table('posts')->selectAll();
 
 /* Delete user */
 //$delete = QueryBuilder::deleteUser(7);
-//$delete = QueryBuilder::table('users')->deleteUser();
+//$delete = QueryBuilder::table('users')->deleteUser(12);
 
 ?>
 

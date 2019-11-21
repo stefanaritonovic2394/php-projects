@@ -21,6 +21,7 @@
         private $holders, $placehold;
         private $fields, $field;
         private $executePrepare;
+        private $where;
 
         public $data;
         public $results;
@@ -47,14 +48,28 @@
             return self::getInstance();
         }
 
+        public function where($options)
+        {
+            $query = " WHERE " . $options;
+            $this->where = $query;
+            return $this;
+        }
+
+        public function get()
+        {
+            $array = (array)$this;
+            $string = implode(" ", $array);
+            return $string;
+        }
+
         public function selectAll()
         {
 //            $stmt = $this->db->prepare("SELECT * FROM " . self::$table);
 //            $stmt->execute();
 //            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 //            return $result;
-            $result = $this->prepareAndExecute("SELECT * FROM " . self::$table);
-            return $result;
+            $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table);
+            return $this;
         }
 
         public function selectById($id)
@@ -106,12 +121,18 @@
         //     return json_encode($result);
         // }
 
-        public function prepareAndExecute(string $query, array $params = [], $style = PDO::FETCH_ASSOC)
+        public function prepareExecuteAndFetch(string $query, array $params = [], $style = PDO::FETCH_ASSOC)
         {
             $stmt = $this->db->prepare($query);
             $stmt->execute($params);
-            $this->executePrepare = $stmt->fetchAll($style);
+            $this->executePrepare = $stmt->fetch($style);
             return $this->executePrepare;
+        }
+
+        public function prepareExecute(string $query, array $params = [])
+        {
+            $stmt = $this->db->prepare($query);
+            $stmt->execute($params);
         }
 
 //        public function execute()
