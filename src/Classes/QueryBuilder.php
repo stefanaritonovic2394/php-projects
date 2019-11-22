@@ -15,16 +15,16 @@
         private static $instance = null;
         private $stmt;
         private static $table;
-        private $connection;
-        private $params;
-        private $cols, $columns;
-        private $holders, $placehold;
-        private $fields, $field;
+//        private $connection;
+//        private $params;
+//        private $cols, $columns;
+//        private $holders, $placehold;
+//        private $fields, $field;
         private $executePrepare;
         private $where;
 
-        public $data;
-        public $results;
+//        public $data;
+//        public $results;
 
         private function __construct()
         {
@@ -48,9 +48,9 @@
             return self::getInstance();
         }
 
-        public function where($options)
+        public function where(array $condition)
         {
-            $query = " WHERE " . $options;
+            $query = " WHERE " . $this->implodeArrayKeys($condition);
             $this->where = $query;
             return $this;
         }
@@ -72,38 +72,47 @@
             return $this;
         }
 
+        public function __toString()
+        {
+            return $this->where;
+        }
+
         public function selectById($id)
         {
-            $result = $this->prepareAndExecute("SELECT * FROM " . self::$table . " WHERE id = :id", ['id' => $id]);
+            $result = $this->prepareAndExecute("SELECT * FROM " . self::$table . " WHERE id = ?", ['id' => $id]);
             return $result;
         }
 
         public function insertUser($name, $email, $password)
         {
-            $stmt = $this->db->prepare("INSERT INTO users(name, email, password) VALUES(:name, :email, :password)");
+            $stmt = $this->db->prepare("INSERT INTO users(name, email, password) VALUES(?, ?, ?)");
             $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT)]);
             return true;
         }
 
         public function updateUser($name, $email, $password, $id)
         {
-            $stmt = $this->db->prepare("UPDATE users SET name = :name, email = :email, password = :password WHERE id = :id");
+            $stmt = $this->db->prepare("UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?");
             $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT), 'id' => $id]);
             return true;
         }
 
         public function deleteUser($id)
         {
-            $stmt = $this->db->prepare("DELETE FROM users WHERE id = :id");
+            $stmt = $this->db->prepare("DELETE FROM users WHERE id = ?");
             $stmt->execute(['id' => $id]);
             return true;
         }
 
         public function insertPost($title, $content, $created_at)
         {
-            $stmt = $this->db->prepare("INSERT INTO posts(title, content, created_at) VALUES(:title, :content, :created_at)");
+            $stmt = $this->db->prepare("INSERT INTO posts(title, content, created_at) VALUES(?, ?, ?)");
             $stmt->execute(['title' => $title, 'content' => $content, 'created_at' => $created_at]);
             return true;
+        }
+
+        public function implodeArrayKeys($array) {
+            return implode(" ", array_keys($array));
         }
 
         // private function setColumns(array $columns)
