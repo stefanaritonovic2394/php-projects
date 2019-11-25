@@ -17,11 +17,11 @@ use App\Classes\QueryBuilder;
 
 /* Select all users */
 //$users = QueryBuilder::from('users')->selectAll();
-$users = QueryBuilder::table('users')->selectAll()->where(['id' => 17])->get();
+$users = QueryBuilder::table('users')->where(['id' => 10])->selectAll()->get();
 //echo '<pre>';
 //die(var_dump($users));
 //echo '</pre>';
-//$posts = QueryBuilder::table('posts')->selectAll();
+$posts = QueryBuilder::table('posts')->selectAll()->get();
 
 /* Select user by id */
 //$post = QueryBuilder::get()->from('posts')->selectById(2);
@@ -53,7 +53,7 @@ $users = QueryBuilder::table('users')->selectAll()->where(['id' => 17])->get();
             </div>
             <ul class="list-group list-group-flush">
                 <?php foreach($users as $user) : ?>
-                    <li class="list-group-item"><?php echo $user->name; ?></li>
+                    <li class="list-group-item"><?php echo $user['name']; ?></li>
                 <?php endforeach; ?>
             </ul>
         </div>

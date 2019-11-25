@@ -21,7 +21,9 @@
 //        private $holders, $placehold;
 //        private $fields, $field;
         private $executePrepare;
-        private $where;
+        private $where = [];
+        private $data;
+        private $query;
 
 //        public $data;
 //        public $results;
@@ -48,34 +50,42 @@
             return self::getInstance();
         }
 
-        public function where(array $condition)
+        public function where(array $condition = [])
         {
-            $query = " WHERE " . $this->implodeArrayKeys($condition);
-            $this->where = $query;
+            $this->query = " WHERE " . $this->implodeArrayKeys($condition);
+
+            foreach ($condition as $key => $value)
+            {
+                $arrayValue = $this->where = $value;
+                $this->query .= " = ". $arrayValue;
+            }
+
             return $this;
         }
 
         public function get()
         {
-            $array = (array)$this;
-            $string = implode(" ", $array);
-            return $string;
+//            $array = (array)$this;
+//            $string = implode(" ", $array);
+//            return $string;
+            return $this->data;
         }
 
         public function selectAll()
         {
+
 //            $stmt = $this->db->prepare("SELECT * FROM " . self::$table);
 //            $stmt->execute();
 //            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 //            return $result;
-            $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table);
+            $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table . " " . $this->query);
             return $this;
         }
 
-        public function __toString()
-        {
-            return $this->where;
-        }
+//        public function __toString()
+//        {
+//            return $this->get();
+//        }
 
         public function selectById($id)
         {
@@ -115,6 +125,16 @@
             return implode(" ", array_keys($array));
         }
 
+        public function convertArrayToString($array, $separator = '')
+        {
+            $str = '';
+            foreach ($array as $arr)
+            {
+                $str .= implode($separator, $arr);
+            }
+            return $str;
+        }
+
         // private function setColumns(array $columns)
         // {
         //     $cols = implode(', ', array_values($columns));
@@ -134,7 +154,7 @@
         {
             $stmt = $this->db->prepare($query);
             $stmt->execute($params);
-            $this->executePrepare = $stmt->fetch($style);
+            $this->executePrepare = $stmt->fetchAll($style);
             return $this->executePrepare;
         }
 
