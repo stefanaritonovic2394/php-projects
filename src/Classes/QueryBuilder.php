@@ -56,8 +56,12 @@
 
             foreach ($condition as $key => $value)
             {
-                $arrayValue = $this->where = $value;
-                $this->query .= " = ". $arrayValue;
+                $arrayValues = $this->where = $value;
+//                print_r($arrayValues);
+
+                if (in_array(['=', '>', '<', '>=', '<='], $condition)) {
+                    $this->query .= $arrayValues;
+                }
             }
 
             return $this;
@@ -73,13 +77,17 @@
 
         public function selectAll()
         {
-
 //            $stmt = $this->db->prepare("SELECT * FROM " . self::$table);
 //            $stmt->execute();
 //            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 //            return $result;
-            $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table . " " . $this->query);
-            return $this;
+            if ($this->data) {
+                $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table);
+                return $this;
+            } else {
+                $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table . " " . $this->query);
+                return $this;
+            }
         }
 
 //        public function __toString()
@@ -89,8 +97,8 @@
 
         public function selectById($id)
         {
-            $result = $this->prepareAndExecute("SELECT * FROM " . self::$table . " WHERE id = ?", ['id' => $id]);
-            return $result;
+            $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table . " " . $this->query, ['id' => $id]);
+            return $this;
         }
 
         public function insertUser($name, $email, $password)
@@ -122,7 +130,12 @@
         }
 
         public function implodeArrayKeys($array) {
-            return implode(" ", array_keys($array));
+            return implode(" ", $array);
+        }
+
+        public function is_assoc($arr)
+        {
+            return array_keys($arr) !== range(0, count($arr) - 1);
         }
 
         public function convertArrayToString($array, $separator = '')
