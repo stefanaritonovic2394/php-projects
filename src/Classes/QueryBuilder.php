@@ -9,7 +9,7 @@
     // $dbInstance = Connection::getInstance();
     // $dbConnection = $dbInstance->getConnection();
 
-    class QueryBuilder 
+    class QueryBuilder
     {
         private $db;
         private static $instance = null;
@@ -22,6 +22,7 @@
 //        private $fields, $field;
         private $executePrepare;
         private $where = [];
+        private $and = [];
         private $data;
         private $query;
 
@@ -52,18 +53,37 @@
 
         public function where(array $condition = [])
         {
-            $this->query = " WHERE " . $this->implodeArrayKeys($condition);
+            $this->query = " WHERE ";
 
-            foreach ($condition as $key => $value)
-            {
+            $kljucevi = array_keys($condition);
+
+            foreach ($condition as $key => $value) {
                 $arrayValues = $this->where = $value;
-//                print_r($arrayValues);
+                $arrayKeys = $this->where = $key;
 
-                if (in_array(['=', '>', '<', '>=', '<='], $condition)) {
+                if ($this->is_assoc($condition)) {
+                    if (count($condition) >= 2) {
+                        for ($i = 0 ; $i < count($condition); $i++) {
+                            $this->query .= $kljucevi[$i] . " = " . $condition[$kljucevi[$i]];
+                            if($i != count($condition) - 1) {
+                                $this->query .= " AND ";
+                            }
+                        }
+//                        $andOperator = " AND ";
+//                        $arrayAssocValues = $arrayKeys . " = " . $arrayValues . $andOperator;
+//                        $trimmArr = rtrim($arrayAssocValues, $andOperator);
+//                        print_r($trimmArr);
+//                        $arrayAndValues = $this->and = " AND ". $key . " = ". $value;
+//                        $this->query .= $trimmArr;
+//                        var_dump($this->query); die();
+                    } else {
+                        $arrayAssocValues = $arrayKeys . " = " . $arrayValues;
+                        $this->query .= $arrayAssocValues;
+                    }
+                } elseif (in_array(['=', '>', '<', '>=', '<='], $condition)) {
                     $this->query .= $arrayValues;
                 }
             }
-
             return $this;
         }
 
