@@ -17,7 +17,7 @@ use App\Classes\QueryBuilder;
 
 /* Select all users */
 //$users = QueryBuilder::from('users')->selectAll();
-$users = QueryBuilder::table('users')->where(['id' => 1, 'name' => 'Stefan'])->selectAll()->get();
+$users = QueryBuilder::table('users')->where(['id', '=', 4])->selectAll()->get();
 //echo '<pre>';
 //die(var_dump($users));
 //echo '</pre>';

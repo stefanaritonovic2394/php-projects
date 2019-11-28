@@ -53,37 +53,36 @@
 
         public function where(array $condition = [])
         {
-            $this->query = " WHERE ";
+//            $this->query = " WHERE " .$this->implodeArrayKeys($condition);
 
-            $kljucevi = array_keys($condition);
+            $arrayKeys = array_keys($condition);
+            $arrayValues = $this->where = array_values($condition);
 
-            foreach ($condition as $key => $value) {
-                $arrayValues = $this->where = $value;
-                $arrayKeys = $this->where = $key;
+            $arrLength = count($condition);
 
-                if ($this->is_assoc($condition)) {
-                    if (count($condition) >= 2) {
-                        for ($i = 0 ; $i < count($condition); $i++) {
-                            $this->query .= $kljucevi[$i] . " = " . $condition[$kljucevi[$i]];
-                            if($i != count($condition) - 1) {
-                                $this->query .= " AND ";
-                            }
-                        }
-//                        $andOperator = " AND ";
-//                        $arrayAssocValues = $arrayKeys . " = " . $arrayValues . $andOperator;
-//                        $trimmArr = rtrim($arrayAssocValues, $andOperator);
-//                        print_r($trimmArr);
-//                        $arrayAndValues = $this->and = " AND ". $key . " = ". $value;
-//                        $this->query .= $trimmArr;
-//                        var_dump($this->query); die();
-                    } else {
-                        $arrayAssocValues = $arrayKeys . " = " . $arrayValues;
-                        $this->query .= $arrayAssocValues;
+//            $this->deleteElement($arrayValues, $condition);
+
+            if ($this->is_assoc($condition) && $arrLength >= 2) {
+
+                $this->query = " WHERE ";
+                $i = 0;
+
+                foreach ($condition as $key => $value) {
+                    $this->query .= $key . " = " . $value;
+                    if ($i != count($condition) - 1) {
+                        $this->query .= " AND ";
                     }
-                } elseif (in_array(['=', '>', '<', '>=', '<='], $condition)) {
-                    $this->query .= $arrayValues;
+                    $i++;
+                    array_push($this->where, $value);
+//                    var_dump($this->query);
+                }
+            } else {
+                $this->query = " WHERE " . $this->implodeArrayKeys($condition);
+                if (in_array(['=', '>', '<', '>=', '<='], $condition) && $arrLength === 3) {
+                    $this->query .= $arrayValues[0] . $arrayValues[1] . $arrayValues[2];
                 }
             }
+
             return $this;
         }
 
@@ -156,6 +155,20 @@
         public function is_assoc($arr)
         {
             return array_keys($arr) !== range(0, count($arr) - 1);
+        }
+
+        public function deleteElement($element, &$array){
+            $index = array_search($element, $array);
+            if($index !== false){
+                unset($array[$index]);
+            }
+        }
+
+        public function removeElement($array, $value) {
+            foreach (array_keys($array, $value) as $key) {
+                unset($array[$key]);
+            }
+            return $array;
         }
 
         public function convertArrayToString($array, $separator = '')
