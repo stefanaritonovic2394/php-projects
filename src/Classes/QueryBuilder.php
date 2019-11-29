@@ -23,6 +23,8 @@
         private $executePrepare;
         private $where = [];
         private $and = [];
+        private $array = [];
+        private $namedKeysArr = [];
         private $data;
         private $query;
 
@@ -55,29 +57,34 @@
         {
 //            $this->query = " WHERE " .$this->implodeArrayKeys($condition);
 
-            $arrayKeys = array_keys($condition);
+            $this->arrayKeys = array_keys($condition);
             $arrayValues = $this->where = array_values($condition);
 
             $arrLength = count($condition);
 
+            $this->query = " WHERE ";
+
 //            $this->deleteElement($arrayValues, $condition);
 
-            if ($this->is_assoc($condition) && $arrLength >= 2) {
+            if ($this->is_assoc($condition) && $arrLength == 2) {
 
-                $this->query = " WHERE ";
                 $i = 0;
 
                 foreach ($condition as $key => $value) {
-                    $this->query .= $key . " = " . $value;
+                    $keyName = ":" . $key;
+                    $this->array[$keyName] = $value;
+
+                    $this->namedKeysArr = array_keys($this->array);
+
+                    $this->query .= $key . " = :" . $key;
                     if ($i != count($condition) - 1) {
                         $this->query .= " AND ";
                     }
                     $i++;
-                    array_push($this->where, $value);
 //                    var_dump($this->query);
                 }
             } else {
-                $this->query = " WHERE " . $this->implodeArrayKeys($condition);
+                $this->query .= $this->implodeArrayKeys($condition);
                 if (in_array(['=', '>', '<', '>=', '<='], $condition) && $arrLength === 3) {
                     $this->query .= $arrayValues[0] . $arrayValues[1] . $arrayValues[2];
                 }
@@ -104,7 +111,7 @@
                 $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table);
                 return $this;
             } else {
-                $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table . " " . $this->query);
+                $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table . " " . $this->query, $this->array);
                 return $this;
             }
         }
@@ -116,14 +123,21 @@
 
         public function selectById($id)
         {
-            $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table . " " . $this->query, ['id' => $id]);
+            $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table . " " . $this->query, $this->array);
             return $this;
         }
 
         public function insertUser($name, $email, $password)
         {
-            $stmt = $this->db->prepare("INSERT INTO users(name, email, password) VALUES(?, ?, ?)");
-            $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT)]);
+//            $this->deleteElement($this->namedKeysArr, $this->array);
+            $this->implodeNamedArrayKeys($this->namedKeysArr);
+            for($x = 0; $x < count($this->namedKeysArr); $x++) {
+                $this->removeElement($this->namedKeysArr, $this->namedKeysArr[$x]);
+//                unset($this->namedKeysArr[$x]);
+            }
+            $this->data = $this->prepareExecute("INSERT INTO " . self::$table . " (name, email, password) VALUES (" . $this->implodeNamedArrayKeys($this->namedKeysArr). ")", $this->array);
+//            $stmt = $this->db->prepare("INSERT INTO users(name, email, password) VALUES(?, ?, ?)");
+//            $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT)]);
             return true;
         }
 
@@ -150,6 +164,10 @@
 
         public function implodeArrayKeys($array) {
             return implode(" ", $array);
+        }
+
+        public function implodeNamedArrayKeys($array) {
+            return implode(", ", $array);
         }
 
         public function is_assoc($arr)

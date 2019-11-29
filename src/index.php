@@ -17,7 +17,7 @@ use App\Classes\QueryBuilder;
 
 /* Select all users */
 //$users = QueryBuilder::from('users')->selectAll();
-$users = QueryBuilder::table('users')->where(['id', '=', 4])->selectAll()->get();
+$users = QueryBuilder::table('users')->where(['id' => 6, 'name' => 'Marko'])->selectAll()->get();
 //echo '<pre>';
 //die(var_dump($users));
 //echo '</pre>';
@@ -28,7 +28,7 @@ $posts = QueryBuilder::table('posts')->selectAll()->get();
 //$user = QueryBuilder::table('users')->selectById(11);
 
 /* Insert user */
-//$insert = QueryBuilder::insertUser('Test3', 'test3@gmail.com', 'test123');
+//$insert = QueryBuilder::table('users')->insertUser('Bojan', 'bojan@gmail.com', 'bojan22');
 //$insertPost = QueryBuilder::insertPost('Treci Post', 'Ovo je treci post', now());
 //$insert = QueryBuilder::table('posts')->insertPost('Treci post', 'Ovo je treci post', date('Y-m-d H:i:s'));
 
