@@ -17,7 +17,7 @@ use App\Classes\QueryBuilder;
 
 /* Select all users */
 //$users = QueryBuilder::from('users')->selectAll();
-$users = QueryBuilder::table('users')->where(['id' => 6, 'name' => 'Marko'])->selectAll()->get();
+//$users = QueryBuilder::table('users')->where(['id' => 6, 'name' => 'Marko'])->selectAll()->get();
 //echo '<pre>';
 //die(var_dump($users));
 //echo '</pre>';
@@ -29,12 +29,23 @@ $posts = QueryBuilder::table('posts')->selectAll()->get();
 
 /* Insert user */
 //$insert = QueryBuilder::table('users')->insertUser('Bojan', 'bojan@gmail.com', 'bojan22');
+//$insert = QueryBuilder::table('users')->insert([
+//        'name' => 'Bojan',
+//        'email' => 'bojan@gmail.com',
+//        'password' => password_hash('bojan22', PASSWORD_BCRYPT)
+//]);
 //$insertPost = QueryBuilder::insertPost('Treci Post', 'Ovo je treci post', now());
 //$insert = QueryBuilder::table('posts')->insertPost('Treci post', 'Ovo je treci post', date('Y-m-d H:i:s'));
 
 /* Update user */
 //$update = QueryBuilder::updateUser('Test2', 'test2@gmail.com', 'test2', 9);
 //$update = QueryBuilder::table('users')->updateUser('Test2', 'test2@gmail.com', 'test2', 9);
+$update = QueryBuilder::table('users')->where(['id' => 21])->update([
+    'name' => 'Test5',
+    'email' => 'test5@gmail.com',
+    'password' => password_hash('test55', PASSWORD_BCRYPT),
+    'id' => 21
+]);
 
 /* Delete user */
 //$delete = QueryBuilder::deleteUser(7);
@@ -52,9 +63,9 @@ $posts = QueryBuilder::table('posts')->selectAll()->get();
                 Users
             </div>
             <ul class="list-group list-group-flush">
-                <?php foreach($users as $user) : ?>
-                    <li class="list-group-item"><?php echo $user['name']; ?></li>
-                <?php endforeach; ?>
+                <?php //foreach($users as $user) : ?>
+                    <li class="list-group-item"><?php //echo $user['name']; ?></li>
+                <?php //endforeach; ?>
             </ul>
         </div>
         <div class="card bg-secondary mt-3" style="">

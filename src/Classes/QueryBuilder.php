@@ -57,7 +57,7 @@
         {
 //            $this->query = " WHERE " .$this->implodeArrayKeys($condition);
 
-            $this->arrayKeys = array_keys($condition);
+            $arrayKeys = array_keys($condition);
             $arrayValues = $this->where = array_values($condition);
 
             $arrLength = count($condition);
@@ -130,21 +130,42 @@
         public function insertUser($name, $email, $password)
         {
 //            $this->deleteElement($this->namedKeysArr, $this->array);
-            $this->implodeNamedArrayKeys($this->namedKeysArr);
-            for($x = 0; $x < count($this->namedKeysArr); $x++) {
-                $this->removeElement($this->namedKeysArr, $this->namedKeysArr[$x]);
-//                unset($this->namedKeysArr[$x]);
-            }
-            $this->data = $this->prepareExecute("INSERT INTO " . self::$table . " (name, email, password) VALUES (" . $this->implodeNamedArrayKeys($this->namedKeysArr). ")", $this->array);
-//            $stmt = $this->db->prepare("INSERT INTO users(name, email, password) VALUES(?, ?, ?)");
-//            $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT)]);
+//            $this->implodeNamedArrayKeys($this->namedKeysArr);
+//            for($x = 0; $x < count($this->namedKeysArr); $x++) {
+//                $this->removeElement($this->namedKeysArr, $this->namedKeysArr[$x]);
+////                unset($this->namedKeysArr[$x]);
+//            }
+//            $this->data = $this->prepareExecute("INSERT INTO " . self::$table . " (name, email, password) VALUES (" . $this->implodeNamedArrayKeys($this->namedKeysArr). ")", $this->array);
+////            $stmt = $this->db->prepare("INSERT INTO users(name, email, password) VALUES(?, ?, ?)");
+////            $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT)]);
+//            return true;
+        }
+
+        public function insert(array $params)
+        {
+            $implodeColumnArray = implode(", ", array_keys($params));
+            $implodeValuesArray = implode(",:", array_keys($params));
+            $this->data = $this->prepareExecute("INSERT INTO " . self::$table . "(" . $implodeColumnArray . ") VALUES (:" . $implodeValuesArray . ")", $params);
             return true;
         }
 
-        public function updateUser($name, $email, $password, $id)
+        public function update(array $params)
         {
-            $stmt = $this->db->prepare("UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?");
-            $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT), 'id' => $id]);
+            $columnKeys = array_keys($params);
+            $elements = [];
+            $implodeElementsArray = implode(",", $elements);
+            $lastElement = end($elements);
+            foreach ($columnKeys as $columnKey) {
+                if (array_key_exists('id', $params) && $lastElement) {
+                    $elements[] = "WHERE $columnKey = :$columnKey";
+                } else {
+                    $elements[] = "$columnKey = :$columnKey";
+                }
+            }
+//            $this->data = $this->prepareExecute("UPDATE " . self::$table . " SET " . $implodeElementsArray);
+//            var_dump($elements); die();
+//            $stmt = $this->db->prepare("UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?");
+//            $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT), 'id' => $id]);
             return true;
         }
 
@@ -225,6 +246,10 @@
         public function prepareExecute(string $query, array $params = [])
         {
             $stmt = $this->db->prepare($query);
+            foreach ($this->array as $key => &$val) {
+                $stmt->bindParam($key, $val);
+            }
+//            $stmt->bindParam($this->array, $params);
             $stmt->execute($params);
         }
 
