@@ -17,7 +17,7 @@ use App\Classes\QueryBuilder;
 
 /* Select all users */
 //$users = QueryBuilder::from('users')->selectAll();
-//$users = QueryBuilder::table('users')->where(['id' => 6, 'name' => 'Marko'])->selectAll()->get();
+//$users = QueryBuilder::table('users')->where(['id' => 6, 'name' => 'Test'])->selectAll()->get();
 //echo '<pre>';
 //die(var_dump($users));
 //echo '</pre>';
@@ -40,16 +40,16 @@ $posts = QueryBuilder::table('posts')->selectAll()->get();
 /* Update user */
 //$update = QueryBuilder::updateUser('Test2', 'test2@gmail.com', 'test2', 9);
 //$update = QueryBuilder::table('users')->updateUser('Test2', 'test2@gmail.com', 'test2', 9);
-$update = QueryBuilder::table('users')->where(['id' => 21])->update([
-    'name' => 'Test5',
-    'email' => 'test5@gmail.com',
-    'password' => password_hash('test55', PASSWORD_BCRYPT),
-    'id' => 21
-]);
+//$update = QueryBuilder::table('users')->where(['id' => 6])->update([
+//    'name' => 'Test',
+//    'email' => 'test@gmail.com',
+//    'password' => password_hash('testprvi', PASSWORD_BCRYPT)
+//]);
 
 /* Delete user */
 //$delete = QueryBuilder::deleteUser(7);
 //$delete = QueryBuilder::table('users')->deleteUser(12);
+$delete = QueryBuilder::table('users')->where(['id' => 6])->delete();
 
 ?>
 

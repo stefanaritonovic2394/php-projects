@@ -66,15 +66,15 @@
 
 //            $this->deleteElement($arrayValues, $condition);
 
-            if ($this->is_assoc($condition) && $arrLength == 2) {
+            if ($this->is_assoc($condition) && $arrLength) {
 
                 $i = 0;
 
                 foreach ($condition as $key => $value) {
-                    $keyName = ":" . $key;
-                    $this->array[$keyName] = $value;
-
-                    $this->namedKeysArr = array_keys($this->array);
+//                    $keyName = ":" . $key;
+                    $this->array[$key] = $value;
+//
+//                    $this->namedKeysArr[] = array_keys($this->array);
 
                     $this->query .= $key . " = :" . $key;
                     if ($i != count($condition) - 1) {
@@ -82,6 +82,7 @@
                     }
                     $i++;
 //                    var_dump($this->query);
+
                 }
             } else {
                 $this->query .= $this->implodeArrayKeys($condition);
@@ -151,28 +152,47 @@
 
         public function update(array $params)
         {
+            $this->query = "";
             $columnKeys = array_keys($params);
-            $elements = [];
-            $implodeElementsArray = implode(",", $elements);
-            $lastElement = end($elements);
-            foreach ($columnKeys as $columnKey) {
-                if (array_key_exists('id', $params) && $lastElement) {
-                    $elements[] = "WHERE $columnKey = :$columnKey";
-                } else {
-                    $elements[] = "$columnKey = :$columnKey";
+            $paramLength = count($params);
+
+            for ($i = 0; $i < $paramLength; $i++) {
+                $this->query .= $columnKeys[$i] . " = :" . $columnKeys[$i];
+                if ($i != count($params) - 1) {
+                    $this->query .= ", ";
                 }
             }
-//            $this->data = $this->prepareExecute("UPDATE " . self::$table . " SET " . $implodeElementsArray);
-//            var_dump($elements); die();
+
+            $this->query .= " WHERE ";
+            $columnKeys = array_keys($this->array);
+
+            for ($i = 0; $i < count($this->array); $i++) {
+                $this->query .= $columnKeys[$i] . " = :" . $columnKeys[$i];
+            }
+
+            $params += $this->array;
+//            die(var_dump($this->query));
+
+            $this->data = $this->prepareExecute("UPDATE " . self::$table . " SET " . $this->query, $params);
+//            var_dump($elements, $query); die();
 //            $stmt = $this->db->prepare("UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?");
 //            $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT), 'id' => $id]);
             return true;
         }
 
-        public function deleteUser($id)
+        public function delete()
         {
-            $stmt = $this->db->prepare("DELETE FROM users WHERE id = ?");
-            $stmt->execute(['id' => $id]);
+            $this->query = "";
+            $this->query .= " WHERE ";
+            $columnKeys = array_keys($this->array);
+
+            for ($i = 0; $i < count($this->array); $i++) {
+                $this->query .= $columnKeys[$i] . " = :" . $columnKeys[$i];
+            }
+
+//            var_dump($this->query); die();
+
+            $this->data = $this->prepareExecute("DELETE FROM " . self::$table . $this->query);
             return true;
         }
 
