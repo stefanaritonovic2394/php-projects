@@ -15,11 +15,6 @@
         private static $instance = null;
         private $stmt;
         private static $table;
-//        private $connection;
-//        private $params;
-//        private $cols, $columns;
-//        private $holders, $placehold;
-//        private $fields, $field;
         private $executePrepare;
         private $where = [];
         private $and = [];
@@ -81,8 +76,6 @@
                         $this->query .= " AND ";
                     }
                     $i++;
-//                    var_dump($this->query);
-
                 }
             } else {
                 $this->query .= $this->implodeArrayKeys($condition);
@@ -104,10 +97,6 @@
 
         public function selectAll()
         {
-//            $stmt = $this->db->prepare("SELECT * FROM " . self::$table);
-//            $stmt->execute();
-//            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-//            return $result;
             if ($this->data) {
                 $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table);
                 return $this;
@@ -128,24 +117,17 @@
             return $this;
         }
 
-        public function insertUser($name, $email, $password)
-        {
-//            $this->deleteElement($this->namedKeysArr, $this->array);
-//            $this->implodeNamedArrayKeys($this->namedKeysArr);
-//            for($x = 0; $x < count($this->namedKeysArr); $x++) {
-//                $this->removeElement($this->namedKeysArr, $this->namedKeysArr[$x]);
-////                unset($this->namedKeysArr[$x]);
-//            }
-//            $this->data = $this->prepareExecute("INSERT INTO " . self::$table . " (name, email, password) VALUES (" . $this->implodeNamedArrayKeys($this->namedKeysArr). ")", $this->array);
-////            $stmt = $this->db->prepare("INSERT INTO users(name, email, password) VALUES(?, ?, ?)");
-////            $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT)]);
-//            return true;
-        }
-
         public function insert(array $params)
         {
             $implodeColumnArray = implode(", ", array_keys($params));
             $implodeValuesArray = implode(",:", array_keys($params));
+//            $validator = new Validator();
+//            $validator->validate($params);
+//
+//            $this->validate($params['name'])->int()->max(50)->min(3);
+//            if (count($this->validate->getErrors())) {
+//                return '';
+//            }
             $this->data = $this->prepareExecute("INSERT INTO " . self::$table . "(" . $implodeColumnArray . ") VALUES (:" . $implodeValuesArray . ")", $params);
             return true;
         }
@@ -171,12 +153,8 @@
             }
 
             $params += $this->array;
-//            die(var_dump($this->query));
 
             $this->data = $this->prepareExecute("UPDATE " . self::$table . " SET " . $this->query, $params);
-//            var_dump($elements, $query); die();
-//            $stmt = $this->db->prepare("UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?");
-//            $stmt->execute(['name' => $name, 'email' => $email, 'password' => password_hash($password, PASSWORD_BCRYPT), 'id' => $id]);
             return true;
         }
 
@@ -190,9 +168,7 @@
                 $this->query .= $columnKeys[$i] . " = :" . $columnKeys[$i];
             }
 
-//            var_dump($this->query); die();
-
-            $this->data = $this->prepareExecute("DELETE FROM " . self::$table . $this->query);
+            $this->data = $this->prepareExecute("DELETE FROM " . self::$table . $this->query, $this->array);
             return true;
         }
 
@@ -240,21 +216,6 @@
             return $str;
         }
 
-        // private function setColumns(array $columns)
-        // {
-        //     $cols = implode(', ', array_values($columns));
-        //     return $cols;
-        // }
-
-        // public function select($table, array $columns, $field, $param)
-        // {
-        //     $cols = $this->setColumns($columns);
-        //     $stmt = $this->db->prepare("SELECT $cols FROM $table WHERE $field = ?");
-        //     $stmt->execute(array($param));
-        //     $result = $stmt->fetch();
-        //     return json_encode($result);
-        // }
-
         public function prepareExecuteAndFetch(string $query, array $params = [], $style = PDO::FETCH_ASSOC)
         {
             $stmt = $this->db->prepare($query);
@@ -272,15 +233,5 @@
 //            $stmt->bindParam($this->array, $params);
             $stmt->execute($params);
         }
-
-//        public function execute()
-//        {
-//            return $this->stmt->execute();
-//        }
-
-//        public function fetchAll($style = PDO::FETCH_ASSOC)
-//        {
-//            return $this->executePrepare->fetchAll($style);
-//        }
 
     }

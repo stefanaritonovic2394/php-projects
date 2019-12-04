@@ -17,7 +17,7 @@ use App\Classes\QueryBuilder;
 
 /* Select all users */
 //$users = QueryBuilder::from('users')->selectAll();
-//$users = QueryBuilder::table('users')->where(['id' => 6, 'name' => 'Test'])->selectAll()->get();
+$users = QueryBuilder::table('users')->selectAll()->get();
 //echo '<pre>';
 //die(var_dump($users));
 //echo '</pre>';
@@ -29,13 +29,13 @@ $posts = QueryBuilder::table('posts')->selectAll()->get();
 
 /* Insert user */
 //$insert = QueryBuilder::table('users')->insertUser('Bojan', 'bojan@gmail.com', 'bojan22');
-//$insert = QueryBuilder::table('users')->insert([
-//        'name' => 'Bojan',
-//        'email' => 'bojan@gmail.com',
-//        'password' => password_hash('bojan22', PASSWORD_BCRYPT)
-//]);
 //$insertPost = QueryBuilder::insertPost('Treci Post', 'Ovo je treci post', now());
 //$insert = QueryBuilder::table('posts')->insertPost('Treci post', 'Ovo je treci post', date('Y-m-d H:i:s'));
+//$insert = QueryBuilder::table('users')->insert([
+//    'name' => 'Miljana',
+//    'email' => 'miljana@gmail.com',
+//    'password' => password_hash('miljana', PASSWORD_BCRYPT)
+//]);
 
 /* Update user */
 //$update = QueryBuilder::updateUser('Test2', 'test2@gmail.com', 'test2', 9);
@@ -49,7 +49,7 @@ $posts = QueryBuilder::table('posts')->selectAll()->get();
 /* Delete user */
 //$delete = QueryBuilder::deleteUser(7);
 //$delete = QueryBuilder::table('users')->deleteUser(12);
-$delete = QueryBuilder::table('users')->where(['id' => 6])->delete();
+//$delete = QueryBuilder::table('users')->where(['id' => 6])->delete();
 
 ?>
 
@@ -63,9 +63,9 @@ $delete = QueryBuilder::table('users')->where(['id' => 6])->delete();
                 Users
             </div>
             <ul class="list-group list-group-flush">
-                <?php //foreach($users as $user) : ?>
-                    <li class="list-group-item"><?php //echo $user['name']; ?></li>
-                <?php //endforeach; ?>
+                <?php foreach($users as $user) : ?>
+                    <li class="list-group-item"><?php echo $user['name']; ?></li>
+                <?php endforeach; ?>
             </ul>
         </div>
         <div class="card bg-secondary mt-3" style="">
