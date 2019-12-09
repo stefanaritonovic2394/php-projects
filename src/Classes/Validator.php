@@ -5,7 +5,7 @@
     class Validator implements ValidatorInterface
     {
         private $validators;
-        private $object;
+        private $allowedValues = [];
         private $errors = [];
 //        protected $validate;
 //
@@ -16,13 +16,13 @@
 
         public function validate($data)
         {
-            $this->object = $data;
+            $this->validators = $data;
             return $this;
         }
 
         public function int()
         {
-            if (!is_int($this->object)) {
+            if (!is_int($this->validators)) {
                 $this->errors[] = "Must be integer";
             }
             return $this;
@@ -30,23 +30,39 @@
 
         public function empty()
         {
-            if (empty($this->object)) {
+            if (empty($this->validators)) {
                 $this->errors[] = "Must not be empty";
             }
             return $this;
         }
 
-        public function max($value)
+        public function operator()
         {
-            if (strlen($value) > 10) {
+            $this->allowedValues = [
+                '=',
+                '<',
+                '>'
+            ];
+            list(,$operator,) = $this->validators;
+
+            if (in_array($operator, $this->allowedValues)) {
+                $this->errors[] = "Operator must be '='";
+            }
+
+            return $this;
+        }
+
+        public function max($value, $numberOfChars)
+        {
+            if (strlen($value) > $numberOfChars) {
                 $this->errors[] = "Must not be greater than 10 characters";
             }
             return $this;
         }
 
-        public function min($value)
+        public function min($value, $numberOfChars)
         {
-            if (strlen($value) < 6) {
+            if (strlen($value) < $numberOfChars) {
                 $this->errors[] = "Must be at least 6 characters long";
             }
             return $this;

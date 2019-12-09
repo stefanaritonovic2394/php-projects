@@ -121,18 +121,18 @@
         {
             $implodeColumnArray = implode(", ", array_keys($params));
             $implodeValuesArray = implode(",:", array_keys($params));
-            $validator = new Validator();
-            $validator->validate($params)->empty();
-
-//            $this->validate($params['name'])->int()->max(50)->min(3);
-            if (!$validator->getErrors()) {
-                $this->data = $this->prepareExecute("INSERT INTO " . self::$table . "(" . $implodeColumnArray . ") VALUES (:" . $implodeValuesArray . ")", $params);
-            } else {
+//            $validator = new Validator();
+//            $validator->validate($params)->operator();
+//
+////            $this->validate($params['name'])->int()->max(50)->min(3);
+//            if (!$validator->getErrors()) {
+//                $this->data = $this->prepareExecute("INSERT INTO " . self::$table . "(" . $implodeColumnArray . ") VALUES (:" . $implodeValuesArray . ")", $params);
+//            } else {
 //                foreach ($validator->getErrors() as $error)
 //                {
 //                    echo "$error";
 //                }
-            }
+//            }
             return true;
         }
 
@@ -156,9 +156,22 @@
                 $this->query .= $columnKeys[$i] . " = :" . $columnKeys[$i];
             }
 
+            $validator = new Validator();
+            $validator->validate($this->where)->operator();
+
             $params += $this->array;
 
-            $this->data = $this->prepareExecute("UPDATE " . self::$table . " SET " . $this->query, $params);
+//            $this->validate($params['name'])->int()->max(50)->min(3);
+            if (!$validator->getErrors()) {
+                $this->data = $this->prepareExecute("UPDATE " . self::$table . " SET " . $this->query, $params);
+//                $this->data = $this->prepareExecute("INSERT INTO " . self::$table . "(" . $implodeColumnArray . ") VALUES (:" . $implodeValuesArray . ")", $params);
+            } else {
+                foreach ($validator->getErrors() as $error)
+                {
+                    echo "$error";
+                }
+            }
+
             return true;
         }
 

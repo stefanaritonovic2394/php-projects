@@ -40,16 +40,16 @@ $posts = QueryBuilder::table('posts')->selectAll()->get();
 /* Update user */
 //$update = QueryBuilder::updateUser('Test2', 'test2@gmail.com', 'test2', 9);
 //$update = QueryBuilder::table('users')->updateUser('Test2', 'test2@gmail.com', 'test2', 9);
-//$update = QueryBuilder::table('users')->where(['id' => 6])->update([
-//    'name' => 'Test',
-//    'email' => 'test@gmail.com',
-//    'password' => password_hash('testprvi', PASSWORD_BCRYPT)
-//]);
+$update = QueryBuilder::table('users')->where(['id', '=', 10])->update([
+    'name' => 'Test3',
+    'email' => 'test3@gmail.com',
+    'password' => password_hash('testtri', PASSWORD_BCRYPT)
+]);
 
 /* Delete user */
 //$delete = QueryBuilder::deleteUser(7);
 //$delete = QueryBuilder::table('users')->deleteUser(12);
-//$delete = QueryBuilder::table('users')->where(['id' => 6])->delete();
+//$delete = QueryBuilder::table('users')->where(['id' => 9])->delete();
 
 ?>
 
