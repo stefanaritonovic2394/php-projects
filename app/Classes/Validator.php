@@ -14,7 +14,7 @@
 //            $this->validate = $validate;
 //        }
 
-        public function validate($data)
+        public function validate(array $data)
         {
             $this->validators = $data;
             return $this;
@@ -45,7 +45,7 @@
             ];
             list(,$operator,) = $this->validators;
 
-            if (in_array($operator, $this->allowedValues)) {
+            if (!in_array($operator, $this->allowedValues)) {
                 $this->errors[] = "Operator must be '='";
             }
 

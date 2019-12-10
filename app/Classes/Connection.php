@@ -9,8 +9,8 @@
         private static $pdo;
 
         private $db_host = 'localhost';
-        private $db_user = 'stefan';
-        private $db_password = 'stefan12';
+        private $db_user = 'root';
+        private $db_password = 'stefan95';
         private $db_name = 'oop_login_register';
 
         private function __construct() 

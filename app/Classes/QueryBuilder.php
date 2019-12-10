@@ -22,6 +22,7 @@
         private $namedKeysArr = [];
         private $data;
         private $query;
+        private $validator;
 
 //        public $data;
 //        public $results;
@@ -29,6 +30,7 @@
         private function __construct()
         {
             $this->db = Connection::getInstance();
+            $this->validator = new Validator();
             //$this->connection = Connection::getPDO();
         }
 
@@ -156,17 +158,16 @@
                 $this->query .= $columnKeys[$i] . " = :" . $columnKeys[$i];
             }
 
-            $validator = new Validator();
-            $validator->validate($this->where)->operator();
+            $this->validator->validate($params)->operator();
 
             $params += $this->array;
 
 //            $this->validate($params['name'])->int()->max(50)->min(3);
-            if (!$validator->getErrors()) {
+            if (!$this->validator->getErrors()) {
                 $this->data = $this->prepareExecute("UPDATE " . self::$table . " SET " . $this->query, $params);
 //                $this->data = $this->prepareExecute("INSERT INTO " . self::$table . "(" . $implodeColumnArray . ") VALUES (:" . $implodeValuesArray . ")", $params);
             } else {
-                foreach ($validator->getErrors() as $error)
+                foreach ($this->validator->getErrors() as $error)
                 {
                     echo "$error";
                 }
