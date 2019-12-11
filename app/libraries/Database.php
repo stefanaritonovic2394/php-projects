@@ -1,6 +1,8 @@
 <?php
 
-class Database
-{
+    namespace App\Libraries;
 
-}
+    class Database
+    {
+
+    }

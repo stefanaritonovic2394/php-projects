@@ -1,9 +1,14 @@
 <?php
 
-class Users
-{
-    public function __construct()
+    namespace App\Controllers;
+    use App\Libraries\Controller;
+
+    class Users extends Controller
     {
-        echo "Users loaded!";
+        protected $currentController = "Users";
+
+        public function __construct()
+        {
+            echo "Users loaded!";
+        }
     }
-}
