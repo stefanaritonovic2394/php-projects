@@ -13,11 +13,15 @@
 
         public function index()
         {
-//            $this->view('index');
+            $this->view('pages/index', ['title' => 'Welcome']);
         }
 
-        public function about($id)
+        public function about()
         {
-            echo $id;
+            $data = [
+                'title' => 'About'
+            ];
+
+            $this->view('pages/about', $data);
         }
     }

@@ -12,11 +12,17 @@
         public function __construct()
         {
 //            print_r($this->getUrl());
+        }
+
+        public function loadControllersAndMethodsFromUrl()
+        {
             $url = $this->getUrl();
 
-            if (class_exists('App\Controllers\\' . ucwords($url[0]))) {
-                $this->currentController = ucwords($url[0]);
-                unset($url[0]);
+            for ($i = 0; $i < count((array)$url); $i++) {
+                if (class_exists('App\Controllers\\' . ucwords($url[$i]))) {
+                    $this->currentController = ucwords($url[$i]);
+                    unset($url[$i]);
+                }
             }
 
 //            require_once '../app/Controllers/' . $this->currentController . '.php';
@@ -24,10 +30,17 @@
 
             $this->currentController = new $controller;
 
-            if (isset($url[1])) {
-                if (method_exists($this->currentController, $url[1])) {
-                    $this->currentMethod = $url[1];
-                    unset($url[1]);
+//            $urlValues = array_values($url);
+//            $lastElement = array_slice($url, 2, 1);
+
+            for ($i = 0; $i < count((array)$url); $i++) {
+                $lastUrlElement = end($url);
+
+                if (isset($url[$i]) && $lastUrlElement) {
+                    if (method_exists($this->currentController, $url[$i])) {
+                        $this->currentMethod = $url[$i];
+                        unset($url[$i]);
+                    }
                 }
             }
 
