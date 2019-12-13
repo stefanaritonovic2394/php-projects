@@ -1,13 +1,7 @@
 <?php
 
-    namespace App\Classes;
+    namespace App\Libraries;
     use PDO;
-    //include '../includes/config.php';
-    //include __DIR__ . '/../includes/autoload.php';
-    //require_once '../../vendor/autoload.php';
-
-    // $dbInstance = Connection::getInstance();
-    // $dbConnection = $dbInstance->getConnection();
 
     class QueryBuilder
     {
@@ -29,9 +23,8 @@
 
         private function __construct()
         {
-            $this->db = Connection::getInstance();
-            $this->validator = new Validator();
-            //$this->connection = Connection::getPDO();
+            $this->db = Database::getInstance();
+//            $this->validator = new Validator();
         }
 
         public static function getInstance()
@@ -135,6 +128,7 @@
 //                    echo "$error";
 //                }
 //            }
+            $this->data = $this->prepareExecute("INSERT INTO " . self::$table . "(" . $implodeColumnArray . ") VALUES (:" . $implodeValuesArray . ")", $params);
             return true;
         }
 
@@ -158,21 +152,21 @@
                 $this->query .= $columnKeys[$i] . " = :" . $columnKeys[$i];
             }
 
-            $this->validator->validate($params)->operator();
+//            $this->validator->validate($params)->operator();
 
             $params += $this->array;
 
 //            $this->validate($params['name'])->int()->max(50)->min(3);
-            if (!$this->validator->getErrors()) {
-                $this->data = $this->prepareExecute("UPDATE " . self::$table . " SET " . $this->query, $params);
-//                $this->data = $this->prepareExecute("INSERT INTO " . self::$table . "(" . $implodeColumnArray . ") VALUES (:" . $implodeValuesArray . ")", $params);
-            } else {
-                foreach ($this->validator->getErrors() as $error)
-                {
-                    echo "$error";
-                }
-            }
-
+//            if (!$this->validator->getErrors()) {
+//                $this->data = $this->prepareExecute("UPDATE " . self::$table . " SET " . $this->query, $params);
+////                $this->data = $this->prepareExecute("INSERT INTO " . self::$table . "(" . $implodeColumnArray . ") VALUES (:" . $implodeValuesArray . ")", $params);
+//            } else {
+//                foreach ($this->validator->getErrors() as $error)
+//                {
+//                    echo "$error";
+//                }
+//            }
+            $this->data = $this->prepareExecute("UPDATE " . self::$table . " SET " . $this->query, $params);
             return true;
         }
 

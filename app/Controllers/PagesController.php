@@ -5,10 +5,11 @@
 
     class PagesController extends Controller
     {
+        private $userModel;
+
         public function __construct()
         {
-//            echo "PagesController";
-//            $this->index();
+            $this->userModel = $this->model('User');
         }
 
         public function index()
