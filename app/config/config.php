@@ -2,6 +2,9 @@
 
     define('ROOT', dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR);
     define('APP_ROOT', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+    define('VIEW', APP_ROOT . 'Views' . DIRECTORY_SEPARATOR);
+    define('MODEL', APP_ROOT . 'Models' . DIRECTORY_SEPARATOR);
+    define('CONTROLLER', APP_ROOT . 'Controllers' . DIRECTORY_SEPARATOR);
     define('URL_ROOT', 'http://localhost/php-projects');
     define('SITE_NAME', 'MVC');
 

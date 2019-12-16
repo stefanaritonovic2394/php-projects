@@ -19,28 +19,21 @@
             $url = $this->getUrl();
 
             for ($i = 0; $i < count((array)$url); $i++) {
-                if (class_exists('App\Controllers\\' . ucwords($url[$i]))) {
-                    $this->currentController = ucwords($url[$i]);
+                if (class_exists('App\Controllers\\' . ucwords($url[$i]). 'Controller')) {
+                    $this->currentController = ucwords($url[$i] . 'Controller');
                     unset($url[$i]);
                 }
             }
 
-//            require_once '../app/Controllers/' . $this->currentController . '.php';
+            require_once CONTROLLER . $this->currentController . '.php';
             $controller = "App\Controllers\\" . $this->currentController;
 
             $this->currentController = new $controller;
 
-//            $urlValues = array_values($url);
-//            $lastElement = array_slice($url, 2, 1);
-
-            for ($i = 0; $i < count((array)$url); $i++) {
-                $lastUrlElement = end($url);
-
-                if (isset($url[$i]) && $lastUrlElement) {
-                    if (method_exists($this->currentController, $url[$i])) {
-                        $this->currentMethod = $url[$i];
-                        unset($url[$i]);
-                    }
+            if (isset($url[1])) {
+                if (method_exists($this->currentController, $url[1])) {
+                    $this->currentMethod = $url[1];
+                    unset($url[1]);
                 }
             }
 

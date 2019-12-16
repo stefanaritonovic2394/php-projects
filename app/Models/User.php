@@ -7,14 +7,20 @@
 
     class User
     {
+        private $db;
         private $queryBuilder;
-        private $name;
-        private $email;
-        private $password;
+        public $name;
+        public $email;
+        public $password;
 
         public function __construct()
         {
-            $this->queryBuilder = QueryBuilder::getInstance();
+//            $this->db = Database::getInstance();
+//            $this->queryBuilder = QueryBuilder::table('users')->selectAll()->get();
+        }
+
+        public function getUsers() {
+            return $this->queryBuilder = QueryBuilder::table('users')->selectAll()->get();
         }
 
     }

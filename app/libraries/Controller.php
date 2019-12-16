@@ -1,24 +1,23 @@
 <?php
 
     namespace App\Libraries;
+    use App\Models;
 
     class Controller
     {
+        protected $model;
+        protected $view;
+
         public function model($model)
         {
-            if (file_exists('../app/Models/' . $model . '.php')) {
-                require_once '../app/Models/' . $model . '.php';
-//                return new $model();
-            } else {
-                die('Model does not exist');
-            }
-
+            $this->model = new $model;
+            return $this->model;
         }
 
         public function view($view, $data = [])
         {
-            if (file_exists('../app/Views/' . $view . '.php')) {
-                require_once '../app/Views/' . $view . '.php';
+            if (file_exists(VIEW . $view . '.php')) {
+                require_once VIEW . $view . '.php';
             } else {
                 die('View does not exist');
             }
