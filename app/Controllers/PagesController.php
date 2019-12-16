@@ -9,6 +9,7 @@
 
         public function __construct()
         {
+            //model metoda ne vraca vrednost
             $this->userModel = $this->model('User');
         }
 

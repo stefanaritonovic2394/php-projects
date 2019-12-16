@@ -14,6 +14,7 @@
 
         public function __construct()
         {
+            // Ne mozemo instancirati QueryBuilder unutar model
             $this->queryBuilder = QueryBuilder::getInstance();
         }
 

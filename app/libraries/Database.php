@@ -20,6 +20,8 @@
                 self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 self::$pdo->exec('set names utf8');
                 //echo $this->db_host . " connected successfully" . PHP_EOL;
+
+                // moras da importujes ovu klasu!
             } catch (PDOException $e) {
                 echo "Connection failed: " . $e->getMessage();
                 die;
