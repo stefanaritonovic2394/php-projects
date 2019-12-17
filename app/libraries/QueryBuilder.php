@@ -1,7 +1,9 @@
 <?php
 
     namespace App\Libraries;
+
     use PDO;
+    use App\Models\User;
 
     class QueryBuilder
     {
@@ -93,10 +95,10 @@
         public function selectAll()
         {
             if ($this->data) {
-                $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table);
+                $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table, [], PDO::FETCH_CLASS, 'App\Models\\' . rtrim(ucfirst(self::$table), 's'));
                 return $this;
             } else {
-                $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table . " " . $this->query, $this->array);
+                $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table . " " . $this->query, $this->array, PDO::FETCH_CLASS, 'App\Models\\' . rtrim(ucfirst(self::$table), 's'));
                 return $this;
             }
         }
@@ -108,8 +110,9 @@
 
         public function selectById($id)
         {
-            $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table . " " . $this->query, $this->array);
-            return $this;
+            $this->where(['id' => $id]);
+            $this->data = $this->prepareExecuteAndFetch("SELECT * FROM " . self::$table . " " . $this->query, $this->array, PDO::FETCH_CLASS, 'App\Models\\' . rtrim(ucfirst(self::$table), 's'));
+            return $this->data;
         }
 
         public function insert(array $params)
@@ -228,12 +231,21 @@
             return $str;
         }
 
-        public function prepareExecuteAndFetch(string $query, array $params = [], $style = PDO::FETCH_ASSOC)
+        public function prepareExecuteAndFetch(string $query, array $params = [], $style = PDO::FETCH_ASSOC, $class = null)
         {
             $stmt = $this->db->prepare($query);
             $stmt->execute($params);
-            $this->executePrepare = $stmt->fetchAll($style);
-            return $this->executePrepare;
+            if (!isset($params)) {
+                if (!isset($class)) {
+                    if (!isset($query)) {
+                        return $this->executePrepare = $stmt->fetchAll($style);
+                    }
+                    return $this->executePrepare = $stmt->fetchAll($style);
+                }
+//                return $this->executePrepare = $stmt->fetchAll($style, $class);
+            }
+            return $this->executePrepare = $stmt->fetchAll($style, $class);
+//            return $this->executePrepare;
         }
 
         public function prepareExecute(string $query, array $params = [])
