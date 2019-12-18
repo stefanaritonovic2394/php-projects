@@ -57,25 +57,25 @@
 
         public function store()
         {
-            $insertPost = $this->queryBuilder::table('posts')->insert([
-                'title' => 'Treci post',
-                'content' => 'Ovo je treci post',
+            $insertPost = $this->queryBuilder::table('users')->insert([
+                'name' => 'Dejana',
+                'email' => 'dejana@gmail.com',
+                'password' => password_hash('dejana', PASSWORD_BCRYPT)
+            ]);
+        }
+
+        public function update($id)
+        {
+            $updatePost = $this->queryBuilder::table('posts')->where(['id' => $id])->update([
+                'title' => 'Post 4',
+                'content' => 'Sadrzaj cetvrtog posta',
                 'created_at' => date('Y-m-d H:i:s')
             ]);
         }
 
-        public function update()
+        public function delete($id)
         {
-            $updatePost = $this->queryBuilder::table('posts')->where(['id' => 3])->update([
-                'title' => 'Treci Post',
-                'content' => 'Sadrzaj treceg posta',
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
-        }
-
-        public function delete()
-        {
-            $deletePost = QueryBuilder::table('posts')->where(['id' => 3])->delete();
+            $deletePost = QueryBuilder::table('posts')->where(['id' => $id])->delete();
 
             $this->view('pages/index');
         }

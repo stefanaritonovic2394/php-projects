@@ -235,17 +235,17 @@
         {
             $stmt = $this->db->prepare($query);
             $stmt->execute($params);
-            if (!isset($params)) {
-                if (!isset($class)) {
-                    if (!isset($query)) {
-                        return $this->executePrepare = $stmt->fetchAll($style);
-                    }
+
+            switch ($style) {
+                case PDO::FETCH_ASSOC:
                     return $this->executePrepare = $stmt->fetchAll($style);
-                }
-//                return $this->executePrepare = $stmt->fetchAll($style, $class);
+                    break;
+                case PDO::FETCH_CLASS:
+                    return $this->executePrepare = $stmt->fetchAll($style, $class);
+                    break;
             }
-            return $this->executePrepare = $stmt->fetchAll($style, $class);
-//            return $this->executePrepare;
+
+            return $this->executePrepare;
         }
 
         public function prepareExecute(string $query, array $params = [])
