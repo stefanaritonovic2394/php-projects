@@ -8,7 +8,10 @@
 
     $core = new Core;
     $core->loadControllersAndMethodsFromUrl();
-//    $router = new Router(new Request);
+    $request = new Request();
+    $router = new Router($request);
+//    print_r($request->getRequestBody());
+//    print_r($request->getRequestUri());
 //    $router->get('/getdata', function () {
 //       return "<h1>Hello WORLD</h1>";
 //    });
