@@ -30,6 +30,18 @@
             $this->view('user/create');
         }
 
+        public function show($id = '')
+        {
+            $user = $this->model(User::class);
+            $finduser = $this->queryBuilder::table('posts')->selectById($id);
+
+            $data = [
+                'user' => $finduser
+            ];
+
+            $this->view('user/show', $data);
+        }
+
         public function store()
         {
             $name = Request::post('name');
