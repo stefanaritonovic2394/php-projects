@@ -9,7 +9,9 @@
     $core = new Core;
     $core->loadControllersAndMethodsFromUrl();
     $request = new Request();
-    $router = new Router($request);
+    $router = new Router();
+    $router->add('/user', ['controller' => 'UserController', 'action' => 'index']);
+    $router->dispatch($_SERVER['QUERY_STRING']);
 //    print_r($request->getRequestBody());
 //    print_r($request->getRequestUri());
 //    $router->get('/getdata', function () {

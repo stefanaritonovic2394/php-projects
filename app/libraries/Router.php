@@ -4,70 +4,114 @@
 
     class Router
     {
-        private $request;
-        private $httpMethods = [
-            "GET",
-            "POST"
-        ];
+        protected $routes = [];
+        protected $params = [];
 
-        public function __construct(RequestInterface $request)
+        public function add($route, $params = [])
         {
-            $this->request = $request;
+            $route = preg_replace('/\//', '\\/', $route);
+
+            $route = preg_replace('/\{([a-z]+)\}/', '(?P<\1>[a-z-]+)', $route);
+
+            $route = preg_replace('/\{([a-z]+):([^\}]+)\}/', '(?P<\1>\2)', $route);
+
+            $route = '/^' . $route . '$/i';
+
+            $this->routes[$route] = $params;
         }
 
-        function __call($name, $args)
+        public function getRoutes()
         {
-            list($route, $method) = $args;
+            return $this->routes;
+        }
 
-            if (!in_array(strtoupper($name), $this->httpMethods))
-            {
-                $this->invalidMethodHandler();
+        public function match($url)
+        {
+            foreach ($this->routes as $route => $params) {
+                if (preg_match($route, $url, $matches)) {
+                    // Get named capture group values
+                    foreach ($matches as $key => $match) {
+                        if (is_string($key)) {
+                            $params[$key] = $match;
+                        }
+                    }
+
+                    $this->params = $params;
+                    return true;
+                }
             }
 
-            $this->{strtolower($name)}[$this->formatRoute($route)] = $method;
+            return false;
         }
 
-        private function formatRoute($route)
+        public function getParams()
         {
-            $result = rtrim($route, '/');
+            return $this->params;
+        }
 
-            if ($result === '')
-            {
-                return '/';
+        public function dispatch($url)
+        {
+            $url = $this->removeQueryStringVariables($url);
+
+            if ($this->match($url)) {
+                $controller = $this->params['controller'];
+                $controller = $this->convertToStudlyCaps($controller);
+                $controller = $this->getNamespace() . $controller;
+
+                if (class_exists($controller)) {
+                    $controller_object = new $controller($this->params);
+
+                    $action = $this->params['action'];
+                    $action = $this->convertToCamelCase($action);
+
+                    if (preg_match('/action$/i', $action) == 0) {
+                        $controller_object->$action();
+
+                    } else {
+                        throw new \Exception("Method $action in controller $controller cannot be called directly - remove the Action suffix to call this method");
+                    }
+                } else {
+                    throw new \Exception("Controller class $controller not found");
+                }
+            } else {
+                throw new \Exception('No route matched.', 404);
+            }
+        }
+
+        protected function convertToStudlyCaps($string)
+        {
+            return str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
+        }
+
+        protected function convertToCamelCase($string)
+        {
+            return lcfirst($this->convertToStudlyCaps($string));
+        }
+
+        protected function removeQueryStringVariables($url)
+        {
+            if ($url != '') {
+                $parts = explode('&', $url, 2);
+
+                if (strpos($parts[0], '=') === false) {
+                    $url = $parts[0];
+                } else {
+                    $url = '';
+                }
             }
 
-            return $result;
+            return $url;
         }
 
-        private function invalidMethodHandler()
+        protected function getNamespace()
         {
-//            header("{$this->request->serverProtocol} 405 Method Not Allowed");
-        }
+            $namespace = 'App\Controllers\\';
 
-        private function defaultRequestHandler()
-        {
-            echo "404 Not Found";
-//            header("{$this->request->serverProtocol} 404 Not Found");
-        }
-
-        public function resolve()
-        {
-            $methodDictionary = $this->{strtolower($this->request->getRequestMethod())};
-            $formatedRoute = $this->formatRoute($this->request->getRequestUri());
-            $method = $methodDictionary[$formatedRoute];
-
-            if (is_null($method))
-            {
-                $this->defaultRequestHandler();
-                return;
+            if (array_key_exists('namespace', $this->params)) {
+                $namespace .= $this->params['namespace'] . '\\';
             }
 
-            call_user_func_array($method, [$this->request]);
-        }
-
-        public function __destruct()
-        {
-            $this->resolve();
+            return $namespace;
         }
 
     }

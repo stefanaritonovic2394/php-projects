@@ -1,7 +1,7 @@
 <?php require VIEW . '/includes/header.php'; ?>
     <div class="container">
         <h3>All Users</h3>
-        <a href="<?php echo URL_ROOT; ?>/user/create" class="btn btn-primary">Add new user</a>
+        <a href="<?php echo URL_ROOT; ?>/user/create" class="btn btn-primary mb-3">Add new user</a>
         <br>
         <ul class="list-group list-group-flush">
             <table class="table table-striped">
@@ -9,6 +9,8 @@
                     <tr>
                         <th scope="col">Name</th>
                         <th scope="col">Email</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -16,6 +18,8 @@
                         <tr>
                             <td><?php echo "{$user->name}" ?></td>
                             <td><?php echo "{$user->email}" ?></td>
+                            <td><a href="<?php echo URL_ROOT; ?>/user/edit/<?php echo $user->id; ?>" class="btn btn-warning">Edit</a></td>
+                            <td><a href="<?php echo URL_ROOT; ?>/user/delete/<?php echo $user->id; ?>" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
