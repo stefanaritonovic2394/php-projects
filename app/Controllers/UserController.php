@@ -62,7 +62,7 @@
                 'password' => password_hash($password, PASSWORD_BCRYPT)
             ]);
 
-            header('Location: ' . URL_ROOT . '/user');
+            header('Location: ' . URL_ROOT . '/user/index');
 
 //                $this->view('user/index');
         }

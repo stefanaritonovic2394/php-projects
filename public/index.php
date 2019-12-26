@@ -6,12 +6,19 @@
 
     require_once '../app/bootstrap.php';
 
-    $core = new Core;
-    $core->loadControllersAndMethodsFromUrl();
+//    $core = new Core;
+//    $core->loadControllersAndMethodsFromUrl();
     $request = new Request();
     $router = new Router();
-    $router->add('/user', ['controller' => 'UserController', 'action' => 'index']);
-    $router->dispatch($_SERVER['QUERY_STRING']);
+    $router->add('', ['controller' => 'pages', 'action' => 'index']);
+    $router->add('user/index', ['controller' => 'user', 'action' => 'index']);
+    $router->add('user/create', ['controller' => 'user', 'action' => 'create']);
+    $router->dispatch($request->getRequestUri());
+//    Router::run('/', function(){
+//        echo "HELLO";
+//    });
+
+//    Router::run('/show', 'user@index');
 //    print_r($request->getRequestBody());
 //    print_r($request->getRequestUri());
 //    $router->get('/getdata', function () {
