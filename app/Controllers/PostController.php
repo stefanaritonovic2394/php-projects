@@ -36,10 +36,10 @@
             $findpost = $this->queryBuilder::table('posts')->selectById($id);
 
             $data = [
-                'user' => $findpost
+                'post' => $findpost
             ];
 
-            $this->view('user/show', $data);
+            $this->view('post/show', $data);
         }
 
         public function store()

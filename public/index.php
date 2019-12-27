@@ -10,20 +10,14 @@
 //    $core->loadControllersAndMethodsFromUrl();
     $request = new Request();
     $router = new Router();
-    $router->add('', ['controller' => 'pages', 'action' => 'index']);
-    $router->add('user/index', ['controller' => 'user', 'action' => 'index']);
-    $router->add('user/create', ['controller' => 'user', 'action' => 'create']);
+    $router->add('/user/index', 'UserController@index');
+    $router->add('/user/create', 'UserController@create');
+    $router->add('/user/edit/{id}', 'UserController@edit');
+    $router->add('/user/show', 'UserController@show');
+    $router->add('/post/index', 'PostController@index');
+    $router->add('/post/create', 'PostController@create');
+    $router->add('/post/edit/{id}', 'PostController@edit');
+    $router->add('/post/show', 'PostController@show');
     $router->dispatch($request->getRequestUri());
-//    Router::run('/', function(){
-//        echo "HELLO";
-//    });
-
-//    Router::run('/show', 'user@index');
 //    print_r($request->getRequestBody());
 //    print_r($request->getRequestUri());
-//    $router->get('/getdata', function () {
-//       return "<h1>Hello WORLD</h1>";
-//    });
-//    $router->post('/data', function($request) {
-//        return json_encode($request->getRequestBody());
-//    });
