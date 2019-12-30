@@ -62,7 +62,7 @@
                 'created_at' => $created_at
             ]);
 
-            header('Location: ' . URL_ROOT . '/post');
+            header('Location: ' . URL_ROOT . '/post/index');
 
 //                $this->view('user/index');
         }
@@ -86,14 +86,14 @@
                 'created_at' => $created_at
             ]);
 
-            header('Location: ' . URL_ROOT . '/post');
+            header('Location: ' . URL_ROOT . '/post/index');
 
         }
 
-        public function delete($id)
+        public function delete($id = null)
         {
             $delete = QueryBuilder::table('posts')->where(['id' => $id])->delete();
-            header('Location: ' . URL_ROOT . '/post');
+            header('Location: ' . URL_ROOT . '/post/index');
         }
 
     }

@@ -9,6 +9,7 @@
         protected $action;
         protected $request;
         protected $params = [];
+        protected $id;
 
         public function add($route, $params = [])
         {
@@ -31,11 +32,18 @@
             $this->params = explode('/', $url);
             unset($this->params[0]);
 
+            $returnValue = false;
+
             foreach ($this->routes as $route => $params) {
+                if (array_key_exists(3, $this->params)) {
+                    $route = str_replace('{id}', $this->params[3], $route);
+                }
                 if ($route == $url) {
-                    return true;
+                    $returnValue = true;
                 }
             }
+
+            return $returnValue;
         }
 
         public function dispatch($url)
@@ -48,14 +56,23 @@
                 $controller = $this->convertToStudlyCaps($controller);
                 $controller = $this->getNamespace() . $controller;
 
+                $argument = null;
+
                 if (class_exists($controller)) {
                     $controller_object = new $controller($this->params);
                     $action = $this->params[2];
+
+                    if(array_key_exists(3, $this->params)){
+                        $argument = $this->params[3];
+                    }
+
                     $action = $this->convertToCamelCase($action);
 
                     if ($action) {
-                        $controller_object->$action();
+                        $controller_object->$action($argument);
                     }
+                } else {
+                    throw new \Exception("Class $controller not found");
                 }
             }
 

@@ -67,10 +67,14 @@
 //                $this->view('user/index');
         }
 
-        public function edit($id = '')
+        public function edit($id = null)
         {
             $data['user'] = $this->queryBuilder::table('users')->selectById($id);
-            $this->view('user/edit', $data);
+            $viewPath = '/user/edit/';
+            $viewPath = ltrim($viewPath, '/');
+            $viewPath = rtrim($viewPath, '/');
+//            var_dump($viewPath);
+            $this->view($viewPath, $data);
         }
 
         public function update()
@@ -88,14 +92,14 @@
                 'password' => password_hash($password, PASSWORD_BCRYPT)
             ]);
 
-            header('Location: ' . URL_ROOT . '/user');
+            header('Location: ' . URL_ROOT . '/user/index');
 
         }
 
-        public function delete($id)
+        public function delete($id = null)
         {
             $delete = QueryBuilder::table('users')->where(['id' => $id])->delete();
-            header('Location: ' . URL_ROOT . '/user');
+            header('Location: ' . URL_ROOT . '/user/index');
 
 //            $this->view('user/index');
         }
