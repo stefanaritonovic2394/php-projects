@@ -4,7 +4,7 @@
 
     class Request implements RequestInterface
     {
-        private $requestMethod;
+        private static $requestMethod;
         private $requestUri;
 
         public function __construct()
@@ -16,7 +16,7 @@
         {
             foreach($_SERVER as $key => $value)
             {
-                $this->requestMethod = $_SERVER['REQUEST_METHOD'];
+                self::$requestMethod = $_SERVER['REQUEST_METHOD'];
                 $this->requestUri = $_SERVER['REQUEST_URI'];
 //                $this->{$this->toCamelCase($key)} = $value;
             }
@@ -41,11 +41,11 @@
         {
             $body = [];
 
-            if ($this->requestMethod === "GET") {
+            if (self::$requestMethod === "GET") {
                 return "GET";
             }
 
-            if ($this->requestMethod === "POST") {
+            if (self::$requestMethod === "POST") {
 
                 foreach($_POST as $key => $value)
                 {
@@ -53,12 +53,12 @@
                 }
 
                 if (array_key_exists('_method', $_POST)) {
-                    $this->requestMethod = 'PUT';
+                    self::$requestMethod = 'PUT';
                     unset($_POST['_method']);
                 }
             }
 
-            if ($this->requestMethod === "PUT") {
+            if (self::$requestMethod === "PUT") {
                 parse_str(file_get_contents("php://input"), $_PUT);
 
                 foreach ($_PUT as $key => $value)
@@ -96,9 +96,9 @@
             return $this->requestUri;
         }
 
-        public function getRequestMethod()
+        public static function getRequestMethod()
         {
-            return $this->requestMethod;
+            return self::$requestMethod;
         }
 
     }

@@ -21,7 +21,9 @@
             $users = $this->queryBuilder::table('users')->selectAll()->get();
 
             $data = ['users' => $users];
+            $join = $this->queryBuilder->selectAll()->join('posts', 'users.post_id = posts.id', 'RIGHT')->get();
 
+            $select = $this->queryBuilder::table('users')->select(['name', 'email'])->join('posts', 'users.post_id = posts.id', 'RIGHT')->get();
             $this->view('user/index', $data);
         }
 
@@ -45,6 +47,7 @@
         public function store()
         {
             $name = Request::post('name');
+            $post_id = Request::post('post_id');
             $email = Request::post('email');
             $password = Request::post('password');
 //            $name = $_POST['name'];
@@ -58,6 +61,7 @@
 
             $insert = $this->queryBuilder::table('users')->insert([
                 'name' => $name,
+                'post_id' => $post_id,
                 'email' => $email,
                 'password' => password_hash($password, PASSWORD_BCRYPT)
             ]);
@@ -70,11 +74,11 @@
         public function edit($id = null)
         {
             $data['user'] = $this->queryBuilder::table('users')->selectById($id);
-            $viewPath = '/user/edit/';
-            $viewPath = ltrim($viewPath, '/');
-            $viewPath = rtrim($viewPath, '/');
+//            $viewPath = '/user/edit/';
+//            $viewPath = ltrim($viewPath, '/');
+//            $viewPath = rtrim($viewPath, '/');
 //            var_dump($viewPath);
-            $this->view($viewPath, $data);
+            $this->view('user/edit', $data);
         }
 
         public function update()

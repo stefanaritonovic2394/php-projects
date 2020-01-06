@@ -9,19 +9,15 @@
     {
         private $db;
         private static $instance = null;
-        private $stmt;
         private static $table;
         private $executePrepare;
         private $where = [];
         private $and = [];
+        private $join;
         private $array = [];
-        private $namedKeysArr = [];
         private $data;
         private $query;
         private $validator;
-
-//        public $data;
-//        public $results;
 
         private function __construct()
         {
@@ -47,8 +43,6 @@
 
         public function where(array $condition = [])
         {
-//            $this->query = " WHERE " .$this->implodeArrayKeys($condition);
-
             $arrayKeys = array_keys($condition);
             $arrayValues = $this->where = array_values($condition);
 
@@ -56,17 +50,12 @@
 
             $this->query = " WHERE ";
 
-//            $this->deleteElement($arrayValues, $condition);
-
             if ($this->is_assoc($condition) && $arrLength) {
 
                 $i = 0;
 
                 foreach ($condition as $key => $value) {
-//                    $keyName = ":" . $key;
                     $this->array[$key] = $value;
-//
-//                    $this->namedKeysArr[] = array_keys($this->array);
 
                     $this->query .= $key . " = :" . $key;
                     if ($i != count($condition) - 1) {
@@ -84,11 +73,23 @@
             return $this;
         }
 
+        public function join($joinTable, $condition, $type = '')
+        {
+            $allowedTypes = ['LEFT', 'RIGHT', 'INNER'];
+            $joinType = strtoupper(trim($type));
+            $joinTable = filter_var($joinTable, FILTER_SANITIZE_STRING);
+
+            if ($joinType && !in_array($type, $allowedTypes)) {
+                die("Wrong type of join " . $type);
+            }
+
+            $this->join = $type . " JOIN " . $joinTable . " ON ";
+            $this->join .= $condition;
+            return $this;
+        }
+
         public function get()
         {
-//            $array = (array)$this;
-//            $string = implode(" ", $array);
-//            return $string;
             return $this->data;
         }
 
@@ -103,10 +104,14 @@
             }
         }
 
-//        public function __toString()
-//        {
-//            return $this->get();
-//        }
+        public function select(array $columns)
+        {
+            $column_values = array_values($columns);
+            foreach ($column_values as $key => $value) {
+                $this->data = $this->prepareExecuteAndFetch("SELECT $value FROM " . self::$table, []);
+            }
+            return $this;
+        }
 
         public function selectById($id)
         {

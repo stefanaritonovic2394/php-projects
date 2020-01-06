@@ -6,5 +6,5 @@
     {
         public function getRequestBody();
         public function getRequestUri();
-        public function getRequestMethod();
+        public static function getRequestMethod();
     }

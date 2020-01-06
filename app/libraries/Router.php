@@ -62,7 +62,7 @@
                     $controller_object = new $controller($this->params);
                     $action = $this->params[2];
 
-                    if(array_key_exists(3, $this->params)){
+                    if (Request::getRequestMethod() == 'GET' && array_key_exists(3, $this->params)) {
                         $argument = $this->params[3];
                     }
 
