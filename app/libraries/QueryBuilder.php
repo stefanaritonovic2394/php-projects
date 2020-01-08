@@ -13,9 +13,9 @@
         private $executePrepare;
         private $where = [];
         private $and = [];
-        private $join;
+        private $join = [];
         private $array = [];
-        private $data;
+        private $data = [];
         private $query;
         private $validator;
 
@@ -73,7 +73,7 @@
             return $this;
         }
 
-        public function join($joinTable, $condition, $type = '')
+        public function join($joinTable, $condition, $type = 'INNER')
         {
             $allowedTypes = ['LEFT', 'RIGHT', 'INNER'];
             $joinType = strtoupper(trim($type));
@@ -83,14 +83,14 @@
                 die("Wrong type of join " . $type);
             }
 
-            $this->join = $type . " JOIN " . $joinTable . " ON ";
-            $this->join .= $condition;
+            $this->query .= " " . $type . " JOIN " . $joinTable . " ON ";
+            $this->query .= $condition;
             return $this;
         }
 
         public function get()
         {
-            return $this->data;
+            return $this->prepareExecuteAndFetch($this->query);
         }
 
         public function selectAll()
@@ -108,7 +108,7 @@
         {
             $column_values = array_values($columns);
             foreach ($column_values as $key => $value) {
-                $this->data = $this->prepareExecuteAndFetch("SELECT $value FROM " . self::$table, []);
+                $this->query = "SELECT " . implode(', ', $columns) . " FROM " . self::$table;
             }
             return $this;
         }

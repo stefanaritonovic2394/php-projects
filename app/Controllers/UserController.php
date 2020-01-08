@@ -18,18 +18,18 @@
 
         public function index()
         {
-            $users = $this->queryBuilder::table('users')->selectAll()->get();
+//            $users = $this->queryBuilder::table('users')->selectAll()->get();
+//            $data = ['users' => $users];
 
-            $data = ['users' => $users];
-            $join = $this->queryBuilder->selectAll()->join('posts', 'users.post_id = posts.id', 'RIGHT')->get();
-
-            $select = $this->queryBuilder::table('users')->select(['name', 'email'])->join('posts', 'users.post_id = posts.id', 'RIGHT')->get();
+            $select = $this->queryBuilder::table('users')->select(['user_id', 'name', 'email'])->join('posts', 'users.post_id = posts.id', 'INNER')->get();
+            $data = ['users' => $select];
             $this->view('user/index', $data);
         }
 
         public function create()
         {
-            $this->view('user/create');
+            $data['post_id'] = 1;
+            $this->view('user/create', $data);
         }
 
         public function show($id = '')
