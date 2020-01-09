@@ -20,10 +20,9 @@
                 self::$pdo = new PDO("mysql:host={$this->db_host};dbname={$this->db_name}", $this->db_user, $this->db_password);
                 self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 self::$pdo->exec('set names utf8');
-                //echo $this->db_host . " connected successfully" . PHP_EOL;
             } catch (PDOException $e) {
                 echo "Connection failed: " . $e->getMessage();
-                die;
+                die();
             }
         }
 

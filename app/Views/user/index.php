@@ -16,10 +16,10 @@
                 <tbody>
                     <?php foreach ($data['users'] as $user): ?>
                         <tr>
-                            <td><?php echo "{$user['name']}" ?></td>
+                            <td><a href="<?php echo URL_ROOT; ?>/user/show/<?php echo "{$user['id']}"; ?>"><?php echo "{$user['name']}"; ?></a></td>
                             <td><?php echo "{$user['email']}" ?></td>
-                            <td><a href="<?php echo URL_ROOT; ?>/user/edit/<?php echo "{$user['user_id']}"; ?>" class="btn btn-warning">Edit</a></td>
-                            <td><a href="<?php echo URL_ROOT; ?>/user/delete/<?php echo "{$user['user_id']}"; ?>" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a></td>
+                            <td><a href="<?php echo URL_ROOT; ?>/user/edit/<?php echo "{$user['id']}"; ?>" class="btn btn-warning">Edit</a></td>
+                            <td><a href="<?php echo URL_ROOT; ?>/user/delete/<?php echo "{$user['id']}"; ?>" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

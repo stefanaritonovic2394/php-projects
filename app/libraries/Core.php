@@ -1,7 +1,6 @@
 <?php
 
     namespace App\Libraries;
-    use App\Controllers\PagesController;
 
     class Core
     {
@@ -11,7 +10,6 @@
 
         public function __construct()
         {
-//            print_r($this->getUrl());
         }
 
         public function loadControllersAndMethodsFromUrl()

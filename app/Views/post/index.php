@@ -16,10 +16,10 @@
                 <tbody>
                     <?php foreach ($data['posts'] as $post): ?>
                         <tr>
-                            <td><?php echo "{$post->title}" ?></td>
-                            <td><?php echo "{$post->content}" ?></td>
-                            <td><a href="<?php echo URL_ROOT; ?>/post/edit/<?php echo $post->id; ?>" class="btn btn-warning">Edit</a></td>
-                            <td><a href="<?php echo URL_ROOT; ?>/post/delete/<?php echo $post->id; ?>" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a></td>
+                            <td><a href="<?php echo URL_ROOT; ?>/post/show/<?php echo "{$post['id']}"; ?>"><?php echo "{$post['title']}"; ?></a></td>
+                            <td><?php echo "{$post['content']}" ?></td>
+                            <td><a href="<?php echo URL_ROOT; ?>/post/edit/<?php echo $post['id']; ?>" class="btn btn-warning">Edit</a></td>
+                            <td><a href="<?php echo URL_ROOT; ?>/post/delete/<?php echo $post['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

@@ -2,7 +2,6 @@
     <div class="container">
         <h1>Create User</h1>
         <form method="POST" action="<?php echo URL_ROOT; ?>/user/store" enctype="multipart/form-data">
-            <input type="hidden" name="post_id" value="<?php echo $data['post_id']; ?>">
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" class="form-control" name="name" id="name" placeholder="Enter name">

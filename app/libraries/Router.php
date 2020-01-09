@@ -51,7 +51,6 @@
             $url = $this->removeQueryStringVariables($url);
 
             if ($this->match($url)) {
-//                $this->params = explode("@", $url);
                 $controller = $this->params[1] . 'Controller';
                 $controller = $this->convertToStudlyCaps($controller);
                 $controller = $this->getNamespace() . $controller;

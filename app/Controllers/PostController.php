@@ -18,8 +18,7 @@
 
         public function index()
         {
-            $posts = $this->queryBuilder::table('posts')->selectAll()->get();
-
+            $posts = $this->queryBuilder::table('posts')->select(['posts.id', 'title', 'content'])->join('users', 'posts.user_id = users.id', 'LEFT')->get();
             $data = ['posts' => $posts];
 
             $this->view('post/index', $data);
@@ -34,10 +33,7 @@
         {
             $post = $this->model(Post::class);
             $findpost = $this->queryBuilder::table('posts')->selectById($id);
-
-            $data = [
-                'post' => $findpost
-            ];
+            $data = ['post' => $findpost];
 
             $this->view('post/show', $data);
         }
@@ -47,9 +43,6 @@
             $title = Request::post('title');
             $content = Request::post('content');
             $created_at = Request::post('created_at');
-//            $name = $_POST['name'];
-//            $email = $_POST['email'];
-//            $password = $_POST['password'];
 
             $post = new Post();
             $post->title = $title;
@@ -63,11 +56,9 @@
             ]);
 
             header('Location: ' . URL_ROOT . '/post/index');
-
-//                $this->view('user/index');
         }
 
-        public function edit($id = '')
+        public function edit($id = null)
         {
             $data['post'] = $this->queryBuilder::table('posts')->selectById($id);
             $this->view('post/edit', $data);
@@ -87,7 +78,6 @@
             ]);
 
             header('Location: ' . URL_ROOT . '/post/index');
-
         }
 
         public function delete($id = null)

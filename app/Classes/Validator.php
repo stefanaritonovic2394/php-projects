@@ -7,12 +7,6 @@
         private $validators;
         private $allowedValues = [];
         private $errors = [];
-//        protected $validate;
-//
-//        public function __construct($validate = null)
-//        {
-//            $this->validate = $validate;
-//        }
 
         public function validate(array $data)
         {
